@@ -18,7 +18,7 @@ import ContactUs from "./Screens/ContactUs";
 import PrintingLogs from "./Screens/PrintingLogs";
 import PrintingLogsView from "./Screens/PrintingLogsView";
 import MyDocument from "./Screens/MyDocument";
-
+import MyDocumentView from "./Screens/MyDocumentView";
 const App = () => {
   return (
     <Router>
@@ -40,6 +40,13 @@ const App = () => {
         path="/PackageDetails/:id"
         component={PackageDetails}
       />
+
+      <PrivateRoute
+        exact
+        path="/MyDocumentView/:id"
+        component={MyDocumentView}
+      />
+
       <PrivateRoute exact path="/ContactUs" component={ContactUs} />
       <PrivateRoute exact path="/PrintingLogs" component={PrintingLogs} />
       <PrivateRoute

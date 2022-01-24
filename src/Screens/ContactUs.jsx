@@ -59,9 +59,9 @@ const ContactUs = ({ history }) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <a href="#_">
+            <Link to='/Dashboard'>
               <i className="fas fa-chevron-left arow-l" />
-            </a>
+            </Link>
             <h4 className="for-head-h4">Contact Us</h4>
             <p className="text-center">Got Any Queries? Fill the form below!</p>
           </div>

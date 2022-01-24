@@ -58,9 +58,9 @@ const PrintingLogs = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <a href="#_">
+            <Link to="/Dashboard">
               <i className="fas fa-chevron-left arow-l" />
-            </a>
+            </Link>
             <h4 className="for-head-h4">Printing Logs</h4>
           </div>
         </div>

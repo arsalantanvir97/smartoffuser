@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Toasty from "../utils/toast";
-import { baseURL } from "../utils/api";
+import { baseURL, imageURL } from "../utils/api";
 import axios from "axios";
 const MyDocument = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -13,19 +13,53 @@ const MyDocument = ({ history }) => {
   const [doc_file, setdoc_file] = useState("");
   const [render, setrender] = useState(false);
   const [userdata, setuserdata] = useState([]);
+  const [userdetails, setuserdetails] = useState();
 
-  useEffect(async () => {
-    if (!userInfo?.subscription) {
-      await Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Please Subscribe to one of our package to manage your documents",
-        showConfirmButton: false,
-        timer: 1500
+  useEffect(() => {
+    handleGetUser();
+  }, []);
+
+  const handleGetUser = async () => {
+    try {
+      const res = await axios({
+        url: `${baseURL}/user/getUserDetailsandCheckSubscrptionExpiry/${userInfo?._id}`,
+        method: "GET",
+
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
       });
-      history.push("/Packages");
+      console.log("handleGetUserres", res);
+      setuserdetails(res?.data?.user);
+      if (!res?.data?.user?.subscriptionid) {
+        await Swal.fire({
+          icon: "info",
+          title: "",
+          text: "Please subscribe to one of our package to manage your documents",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        history.push("/Packages");
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }, [userInfo]);
+  };
+  const redirectToFolderView = (id) => {
+    history.push(`/MyDocumentView/${id}`);
+  };
+  // useEffect(async () => {
+  //   if (!userInfo?.subscription) {
+  //     await Swal.fire({
+  //       icon: "info",
+  //       title: "",
+  //       text: "Please subscribe to one of our package to manage your documents",
+  //       showConfirmButton: false,
+  //       timer: 1500
+  //     });
+  //     history.push("/Packages");
+  //   }
+  // }, [userInfo]);
 
   const getDocsofUser = async () => {
     try {
@@ -148,6 +182,69 @@ const MyDocument = ({ history }) => {
     setdoc_file("");
     setrender(!render);
   };
+  const deleteFolderHandler = async (id) => {
+    console.log("id", id);
+    try {
+      const res = await axios({
+        url: `${baseURL}/folder/deleteFolder/${id}`,
+        method: "GET",
+
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+      Swal.fire({
+        icon: "success",
+        title: "",
+        text: "Folder Deleted Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      getDocsofUser();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "ERROR",
+        text: err?.response?.data?.message
+          ? err?.response?.data?.message
+          : "Internal Server Error",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  };
+
+  const deleteFileHandler = async (id) => {
+    console.log("id", id);
+    try {
+      const res = await axios({
+        url: `${baseURL}/folder/deleteFile/${id}`,
+        method: "GET",
+
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+      Swal.fire({
+        icon: "success",
+        title: "",
+        text: "File Deleted Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      getDocsofUser();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "ERROR",
+        text: err?.response?.data?.message
+          ? err?.response?.data?.message
+          : "Internal Server Error",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  };
   return (
     <>
       <section className="board">
@@ -159,7 +256,7 @@ const MyDocument = ({ history }) => {
               </Link>
               <h4 className="for-head-h4">My Documents</h4>
               <p className="text-center blue-head">
-                {userInfo?.subscriptionid?.packagename} Package
+                {userdetails?.subscriptionid?.packagename} Package
               </p>
             </div>
           </div>
@@ -230,8 +327,8 @@ const MyDocument = ({ history }) => {
                     <div className="card-body text-center">
                       <img
                         src={
-                          data?.folderName? 
-                             "assets/images/folder.png"
+                          data?.folderName
+                            ? "assets/images/folder.png"
                             : data?.docfile?.includes("docx")
                             ? "assets/images/word-pic.png"
                             : data?.docfile?.includes("pdf")
@@ -245,7 +342,11 @@ const MyDocument = ({ history }) => {
                         {data?.fileArr?.length > 0 ? "File" : null}
                       </p>
                       <h4 className="card-title">
-                        {data?.folderName}{" "}
+                        {data?.folderName
+                          ? data?.folderName
+                          : data?.docfile
+                          ? data?.docfile
+                          : null}{" "}
                         {data?.folderName ? "Folder" : null}
                       </h4>
                     </div>
@@ -271,29 +372,55 @@ const MyDocument = ({ history }) => {
                           willChange: "transform"
                         }}
                       >
-                        <a className="dropdown-item" href="events-edit.php">
-                          View
-                        </a>
-                        <hr />
-                        <a
+                        <Link
+                          to="#"
+                          onClick={() => {
+                            data?.folderName
+                              ? redirectToFolderView(data?._id)
+                              : window.open(
+                                  `${imageURL}${data?.docfile}`,
+                                  "_blank"
+                                );
+                          }}
                           className="dropdown-item"
-                          href="#"
+                        >
+                          View
+                        </Link>
+                        <hr />
+                        <Link
+                          to="#"
+                          className="dropdown-item"
                           data-dismiss="modal"
                           data-toggle="modal"
                           data-target="#delt"
+                          onClick={() => {
+                            data?.folderName
+                              ? deleteFolderHandler(data?._id)
+                              : deleteFileHandler(data?._id);
+                          }}
                         >
                           DELETE
-                        </a>
+                        </Link>
                         <hr />
-                        <a className="dropdown-item" href="#">
-                          Print
-                        </a>
+                        {!data?.folderName && (
+                          <Link
+                            to="#"
+                            onClick={() =>
+                              window.open(
+                                `${imageURL}${data?.docfile}`,
+                                "_blank"
+                              )
+                            }
+                            className="dropdown-item"
+                          >
+                            Print
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
-          
           </div>
           <div className="row py-4 text-center">
             <div className="col-lg-12">

@@ -83,9 +83,9 @@ const PackageDetails = ({ match ,history}) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <a href="#_">
+            <Link to='/Packages'>
               <i className="fas fa-chevron-left arow-l" />
-            </a>
+            </Link>
             <h4 className="for-head-h4">Packages</h4>
             <p className="text-center">
               Choose a plan that works best for you!
