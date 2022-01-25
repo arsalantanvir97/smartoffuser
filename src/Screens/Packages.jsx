@@ -74,7 +74,7 @@ const Packages = () => {
                         ))}
                       </div>
                     </div>
-                    <Link to={`/PackageDetails/${pack?._id}`} className="blue-btn my-4">
+                    <Link to={`/PackageDetails${pack?._id}`} className="blue-btn my-4">
                       View Details
                     </Link>
                   </div>

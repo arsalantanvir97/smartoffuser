@@ -48,10 +48,13 @@ const Header = () => {
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
+                      onClick={() => {
+                        history.push("/Notification");
+                      }}
                     >
                       <i className="far fa-bell" />
                     </button>
-                    <div
+                    {/* <div
                       className="dropdown-menu"
                       aria-labelledby="dropdownMenuButton"
                     >
@@ -64,7 +67,6 @@ const Header = () => {
                             <i className="fas fa-bell notifications-bell  mr-3" />
                           </div>
                           <div className="media-body">
-                            {/* <h6 class="media-heading">You have new notification!</h6> */}
                             <p className="notification-text font-small-3 text-muted">
                               Your Subscription will expire are
                             </p>
@@ -99,7 +101,6 @@ const Header = () => {
                             <i className="fas fa-bell notifications-bell  mr-3" />
                           </div>
                           <div className="media-body">
-                            {/* <h6 class="media-heading">You have new notification!</h6> */}
                             <p className="notification-text font-small-3 text-muted">
                               Your Subscription will expire are
                             </p>
@@ -134,7 +135,6 @@ const Header = () => {
                             <i className="fas fa-bell notifications-bell  mr-3" />
                           </div>
                           <div className="media-body">
-                            {/* <h6 class="media-heading">You have new notification!</h6> */}
                             <p className="notification-text font-small-3 text-muted">
                               Your Subscription will expire are
                             </p>
@@ -165,7 +165,7 @@ const Header = () => {
                           View All
                         </a>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </li>
                 <li className="nav-item">

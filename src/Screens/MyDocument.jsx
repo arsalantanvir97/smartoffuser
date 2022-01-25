@@ -5,6 +5,9 @@ import Swal from "sweetalert2";
 import Toasty from "../utils/toast";
 import { baseURL, imageURL } from "../utils/api";
 import axios from "axios";
+import Loading from "../components/Loading";
+import StripeCheckout from "react-stripe-checkout";
+import { closeModals } from "../utils/closeModals";
 const MyDocument = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -14,9 +17,18 @@ const MyDocument = ({ history }) => {
   const [render, setrender] = useState(false);
   const [userdata, setuserdata] = useState([]);
   const [userdetails, setuserdetails] = useState();
-
+  const [machines, setmachines] = useState([]);
+  const [printData, setprintData] = useState();
+  const [pages, setpages] = useState(0);
+  const [type, settype] = useState();
+  const [settings, setsettings] = useState();
+  const [printcost, setprintcost] = useState(0);
+  const [selectedFile, setselectedFile] = useState();
+  const [isLoading, setisLoading] = useState(false);
   useEffect(() => {
     handleGetUser();
+    getAllPrinters();
+    getSetting();
   }, []);
 
   const handleGetUser = async () => {
@@ -46,7 +58,7 @@ const MyDocument = ({ history }) => {
     }
   };
   const redirectToFolderView = (id) => {
-    history.push(`/MyDocumentView/${id}`);
+    history.push(`/MyDocumentView${id}`);
   };
   // useEffect(async () => {
   //   if (!userInfo?.subscription) {
@@ -91,6 +103,42 @@ const MyDocument = ({ history }) => {
     console.log("eeee", e?.target?.files[0]);
     setdoc_file(e?.target?.files[0]);
   };
+
+  const getAllPrinters = async () => {
+    try {
+      const res = await axios.get(
+        `${baseURL}/requestmachine/getRequestMachine`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`
+          }
+        }
+      );
+      if (res?.status == 201) {
+        console.log("res", res?.data);
+        setmachines(res?.data?.requestmachine);
+      }
+    } catch (error) {}
+  };
+  const getSetting = async () => {
+    try {
+      const res = await axios.get(
+        `${baseURL}/settings/gettingsettings`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`
+          }
+        }
+      );
+      if (res?.status == 201) {
+        console.log("res", res?.data);
+        setsettings(res?.data?.setting);
+      }
+    } catch (error) {}
+  };
+
   const submitHandler = async () => {
     const formData = new FormData();
     formData.append("doc_schedule", doc_schedule);
@@ -245,7 +293,109 @@ const MyDocument = ({ history }) => {
       });
     }
   };
-  return (
+  const filterHandler = async (searchString) => {
+    console.log("searchString", searchString);
+    try {
+      const res = await axios({
+        url: `${baseURL}/folder/searchbyFileName`,
+        method: "POST",
+        data: { searchString, userid: userInfo?._id },
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+      console.log("fileres", res);
+      setuserdata(res?.data?.userdata);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "ERROR",
+        text: err?.response?.data?.message
+          ? err?.response?.data?.message
+          : "Internal Server Error",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  };
+
+  const updateTotalCostHandler = (value) => {
+    settype(value);
+    console.log(
+      "updateTotalCostHandler",
+      value,
+      settings.costforcolor,
+      settings.costforblackandwhite
+    );
+    const costperpage =
+      value == "Color" ? settings.costforcolor : settings.costforblackandwhite;
+    const totalcost = costperpage * pages;
+
+    console.log("costperpage", costperpage, totalcost);
+    setprintcost(totalcost);
+  };
+
+  async function handleToken(token) {
+    closeModals();
+    console.log("handleToken");
+    const config = {
+      header: {
+        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V"
+      }
+    };
+    setisLoading(true);
+    const response = await axios.post(
+      `${baseURL}/checkout`,
+      { token, product: printcost },
+      config
+    );
+    console.log("response", response);
+    const { source } = response.data;
+    let printinfo = JSON.parse(printData);
+    console.log(
+      "res",
+      response.data.id,
+      response.data.status,
+      response.headers.date,
+      response.data.receipt_email
+    );
+
+    const res = await axios.post(
+      `${baseURL}/print/create-Print`,
+      {
+        vendorid: printinfo?.vendorid?._id,
+        documentname: selectedFile,
+        pages: pages,
+        type,
+        userid: userInfo?._id,
+        userName: userInfo?.firstName,
+        requestformachine: printinfo?._id,
+        doc_schedule: selectedFile
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      }
+    );
+    setisLoading(false);
+    if (res?.status == 201) {
+      history?.push("/Dashboard");
+      Swal.fire({
+        icon: "success",
+        title: "",
+        text: "Print Created successfully",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  }
+
+  return isLoading ? (
+    <div className="m-4">
+      <Loading style={{ fontSize: 64 }} />
+    </div>
+  ) : (
     <>
       <section className="board">
         <div className="container">
@@ -284,11 +434,14 @@ const MyDocument = ({ history }) => {
             <div className="col-lg-6">
               <div className="form-group">
                 <input
-                  type="email"
+                  type="text"
                   className="form-control"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
-                  placeholder="Find Document"
+                  placeholder="Search by File Name"
+                  onChange={(e) => {
+                    filterHandler(e.target.value);
+                  }}
                 />
               </div>
             </div>
@@ -405,13 +558,12 @@ const MyDocument = ({ history }) => {
                         {!data?.folderName && (
                           <Link
                             to="#"
-                            onClick={() =>
-                              window.open(
-                                `${imageURL}${data?.docfile}`,
-                                "_blank"
-                              )
-                            }
+                            onClick={() => {
+                              setselectedFile(data?.docfile);
+                            }}
                             className="dropdown-item"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
                           >
                             Print
                           </Link>
@@ -422,13 +574,13 @@ const MyDocument = ({ history }) => {
                 </div>
               ))}
           </div>
-          <div className="row py-4 text-center">
+          {/* <div className="row py-4 text-center">
             <div className="col-lg-12">
               <a href="#_" className="btn btn-primary blue-btn2">
                 View All
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -586,6 +738,100 @@ const MyDocument = ({ history }) => {
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="modal fade off-pop"
+        id="exampleModal"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className="modal-body text-center py-4">
+              <div className="row">
+                <div className="col-lg-6 text-left">
+                  <div className="fields">
+                    <div className="f_wrap">
+                      <span>Select Printer</span>
+                      <select
+                        id="show_entries"
+                        value={printData}
+                        onChange={(e) => {
+                          setprintData(e.target.value);
+                        }}
+                      >
+                        {machines?.length > 0 &&
+                          machines?.map((machine) => (
+                            <option value={JSON.stringify(machine)}>
+                              {machine?.branchid?.city}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+
+                    <div className="f_wrap">
+                      <p>No. of Pages</p>
+                      <input
+                        type="number"
+                        placeholder="Select page quantity"
+                        value={pages}
+                        onChange={(e) => {
+                          setpages(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-6 text-left">
+                  <div className="fields">
+                    <div className="f_wrap">
+                      <span>Select Type</span>
+                      <select
+                        id="show_entries"
+                        value={type}
+                        onChange={(e) => {
+                          updateTotalCostHandler(e.target.value);
+                        }}
+                      >
+                        <option>select</option>
+                        <option value={"Color"}>Color</option>
+                        <option value={"Black and White"}>
+                          Black and White
+                        </option>
+                      </select>
+                    </div>
+                    {pages?.length > 0 && type?.length > 0 ? (
+                      <>
+                        <div style={{ width: "100%", textAlign: "center" }}>
+                          <StripeCheckout
+                            stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
+                            token={handleToken}
+                            amount={printcost * 100}
+                            email={userInfo?.email}
+                          ></StripeCheckout>
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

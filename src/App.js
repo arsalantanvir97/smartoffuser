@@ -19,6 +19,8 @@ import PrintingLogs from "./Screens/PrintingLogs";
 import PrintingLogsView from "./Screens/PrintingLogsView";
 import MyDocument from "./Screens/MyDocument";
 import MyDocumentView from "./Screens/MyDocumentView";
+import Notification from "./Screens/Notification";
+
 const App = () => {
   return (
     <Router>
@@ -37,21 +39,23 @@ const App = () => {
       <PrivateRoute exact path="/Packages" component={Packages} />
       <PrivateRoute
         exact
-        path="/PackageDetails/:id"
+        path="/PackageDetails:id"
         component={PackageDetails}
       />
 
       <PrivateRoute
         exact
-        path="/MyDocumentView/:id"
+        path="/MyDocumentView:id"
         component={MyDocumentView}
       />
 
       <PrivateRoute exact path="/ContactUs" component={ContactUs} />
       <PrivateRoute exact path="/PrintingLogs" component={PrintingLogs} />
+      <PrivateRoute exact path="/Notification" component={Notification} />
+
       <PrivateRoute
         exact
-        path="/PrintingLogsView/:id"
+        path="/PrintingLogsView:id"
         component={PrintingLogsView}
       />
       <PrivateRoute exact path="/MyDocument" component={MyDocument} />

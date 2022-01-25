@@ -110,7 +110,7 @@ export const userverfyadnresetpasword =
         { existingpassword, newpassword, confirm_password, email },
         config
       );
-      history?.replace("/dashboard");
+      history?.replace("/Dashboard");
 
       console.log("res", res);
       if (res?.status == 201) {

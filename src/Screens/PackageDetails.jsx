@@ -6,11 +6,14 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
 import Swal from "sweetalert2";
+import Loading from "../components/Loading";
 
 const PackageDetails = ({ match ,history}) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [packagedetails, setpackagedetails] = useState();
+  const [isLoading, setisLoading] = useState(false);
+
   useEffect(() => {
     handlegetPackageDetails();
   }, []);
@@ -32,7 +35,10 @@ const PackageDetails = ({ match ,history}) => {
   };
 
   async function handleToken(token) {
+    
     console.log("handleToken");
+    setisLoading(true)
+
     const config = {
       header: {
         Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V"
@@ -66,6 +72,8 @@ const PackageDetails = ({ match ,history}) => {
         }
       }
     );
+    setisLoading(false);
+
     if (res?.status == 201) {
       history?.push("/Dashboard");
       Swal.fire({
@@ -79,6 +87,11 @@ const PackageDetails = ({ match ,history}) => {
   }
 
   return (
+    isLoading ? (
+      <div className="m-4">
+        <Loading style={{ fontSize: 64 }} />
+      </div>
+    ) : (
     <section className="board">
       <div className="container">
         <div className="row">
@@ -143,7 +156,7 @@ const PackageDetails = ({ match ,history}) => {
         </div>
       </div>
     </section>
-  );
+   ) );
 };
 
 export default PackageDetails;
