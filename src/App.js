@@ -23,7 +23,7 @@ import Notification from "./Screens/Notification";
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/smartoff/user">
       <Route path="/" component={Home} exact />
       <Route path="/Login" component={Login} exact />
       <Route path="/SignUp" component={SignUp} exact />
