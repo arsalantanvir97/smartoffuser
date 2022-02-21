@@ -23,7 +23,7 @@ const Notification = () => {
   const handleGetUsers = async () => {
     try {
       const res = await axios({
-        url: `${baseURL}/notification/usernotification/${userInfo?._id}`,
+        url: `${baseURL}/notification/usernotificationlogs`,
         method: "GET",
         params: {
           page,

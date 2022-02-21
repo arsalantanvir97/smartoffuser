@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header2 from "../components/Header2";
 import Toasty from "../utils/toast";
+import { validateEmail } from "../utils/ValidateEMail";
 const Login = ({ history }) => {
   const dispatch = useDispatch();
   const [email, setemail] = useState("");
@@ -14,8 +15,15 @@ const Login = ({ history }) => {
   const { userInfo } = userLogin;
 
   const submitHandler = () => {
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
     console.log("submitHandler");
     dispatch(userLoginAction(email, password, history));
+  } else {
+    Toasty("error", `Please enter a valid email`);
+  }
   };
 
   useEffect(() => {

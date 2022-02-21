@@ -6,32 +6,40 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import Header2 from "../components/Header2";
+import { validateEmail } from "../utils/ValidateEMail";
 
 const ForgotPassword = ({ history }) => {
   const [email, setemail] = useState("");
   const submitHandler = async () => {
-    const body = { email };
-    console.log("TEST");
-    try {
-      const res = await api.post("/user/userRecoverPassword", body);
-      console.log("res", res);
-      if (res?.status == 201) {
-        Swal.fire({
-          icon: "success",
-          title: "SUCCESS",
-          text: "Verification Code Sent to your mail",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        history.push({
-          pathname: "/verificationcode",
-          state: { email }
-        });
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
+      const body = { email };
+      console.log("TEST");
+      try {
+        const res = await api.post("/user/userRecoverPassword", body);
+        console.log("res", res);
+        if (res?.status == 201) {
+          Swal.fire({
+            icon: "success",
+            title: "SUCCESS",
+            text: "Verification Code Sent to your mail",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          history.push({
+            pathname: "/verificationcode",
+            state: { email }
+          });
+        }
+      } catch (error) {
+        console.log("IN HERE");
+        console.log(error?.response?.data);
+        Toasty("error", `🦄 Invalid Email!`);
       }
-    } catch (error) {
-      console.log("IN HERE");
-      console.log(error?.response?.data);
-      Toasty("error", `🦄 Invalid Email!`);
+    } else {
+      Toasty("error", `Please enter a valid email`);
     }
   };
   return (

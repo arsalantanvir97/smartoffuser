@@ -5,6 +5,7 @@ import Header2 from "../components/Header2";
 import Toasty from "../utils/toast";
 
 import { userSignUpAction } from "../actions/userActions";
+import { validateEmail } from "../utils/ValidateEMail";
 
 const SignUp2 = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -19,19 +20,28 @@ const SignUp2 = ({ history }) => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confirmpassword, setconfirmpassword] = useState("");
+  const [showicon, setshowicon] = useState(true);
+  const [showicon2, setshowicon2] = useState(true);
 
   const dispatch = useDispatch();
 
   const registerUserHandler = async () => {
-    const body = {
-      firstName,
-      confirmpassword,
-      email,
-      lastName,
-      password
-    };
-console.log('body',body);
-    await dispatch(userSignUpAction(body, history));
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
+      const body = {
+        firstName,
+        confirmpassword,
+        email,
+        lastName,
+        password
+      };
+      console.log("body", body);
+      await dispatch(userSignUpAction(body, history));
+    } else {
+      Toasty("error", `Please enter a valid email`);
+    }
   };
   return (
     <>
@@ -90,7 +100,7 @@ console.log('body',body);
                 <div className="form-field">
                   <label htmlFor="exampleInputEmail1">Password *</label>
                   <input
-                    type="password"
+                    type={showicon ? "password" : "text"}
                     className="site-input right-icon enter-input"
                     placeholder="Enter Password"
                     name
@@ -101,14 +111,19 @@ console.log('body',body);
                     }}
                   />
                   <i
-                    className="fa fa-eye-slash enter-icon right-icon"
+                    onClick={() => setshowicon(!showicon)}
+                    className={
+                      showicon
+                        ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                        : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                    }
                     aria-hidden="true"
                   />
                 </div>
                 <div className="form-field">
                   <label htmlFor="exampleInputEmail1">Confirm Password *</label>
                   <input
-                    type="password"
+                    type={showicon2 ? "password" : "text"}
                     className="site-input right-icon enter-input"
                     placeholder="Confirm Password"
                     name
@@ -119,7 +134,12 @@ console.log('body',body);
                     }}
                   />
                   <i
-                    className="fa fa-eye-slash enter-icon right-icon"
+                    onClick={() => setshowicon2(!showicon2)}
+                    className={
+                      showicon2
+                        ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                        : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                    }
                     aria-hidden="true"
                   />
                 </div>
@@ -131,8 +151,8 @@ console.log('body',body);
                     email?.length > 0 &&
                     confirmpassword?.length > 0 &&
                     password?.length > 0 &&
-                    lastName?.length > 0 ? 
-                      registerUserHandler()
+                    lastName?.length > 0
+                      ? registerUserHandler()
                       : Toasty(
                           "error",
                           `Please fill out all the required fields`
@@ -142,7 +162,7 @@ console.log('body',body);
                   Sign Up
                 </button>
                 <div className="text-center py-4">
-                  <Link to='/Login' className="login-ristr">
+                  <Link to="/Login" className="login-ristr">
                     Already have an Account?{" "}
                     <span className="blue-head">Login</span>
                   </Link>

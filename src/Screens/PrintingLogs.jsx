@@ -144,9 +144,7 @@ const PrintingLogs = () => {
                       <i className="fa fa-ellipsis-v" aria-hidden="true" />
                       <ul className="onhover">
                         <li>
-                          <Link to={`PrintingLogsView${print?._id}`}>
-                            View
-                          </Link>
+                          <Link to={`PrintingLogsView${print?._id}`}>View</Link>
                         </li>
                       </ul>
                     </td>

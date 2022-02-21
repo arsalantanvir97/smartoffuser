@@ -27,6 +27,7 @@ const Profile = () => {
   }, [userInfo]);
 
   const updateProfileData = async (e) => {
+    if(firstName?.length>0 && lastName?.length>0){
     const formData = new FormData();
 
     formData.append("user_image", image);
@@ -35,7 +36,10 @@ const Profile = () => {
     formData.append("firstName", firstName);
 
     await dispatch(updateUserInfoAction(formData));
-    setIsEdit(false);
+    setIsEdit(false);}
+    else {
+      Toasty("error", `Please fill out all the required fields`);
+    }
   };
   return (
     <section className="board">

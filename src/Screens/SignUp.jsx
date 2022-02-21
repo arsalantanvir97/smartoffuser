@@ -16,7 +16,7 @@ const SignUp = () => {
           <div className="row py-4 offset-3">
             <div className="col-lg-4">
               <div className="card signup-card">
-                <Link to='/SignUp2'>
+                <Link to="/SignUp2">
                   <div className="card-body text-center">
                     <img src="assets/images/card-usr.png" alt="" />
                     <h4 className="card-title">User</h4>
@@ -26,7 +26,15 @@ const SignUp = () => {
             </div>
             <div className="col-lg-4">
               <div className="card signup-card">
-              <Link to={{ pathname: "https://dev74.onlinetestingserver.com/smartoff/vendor/" }} target="_blank" >
+                <Link
+                  to="#"
+                  onClick={() => {
+                    window.open(
+                      `https://dev74.onlinetestingserver.com/smartoff/vendor/`,
+                      "_blank"
+                    );
+                  }}
+                >
                   <div className="card-body text-center">
                     <svg
                       id="customer-review"

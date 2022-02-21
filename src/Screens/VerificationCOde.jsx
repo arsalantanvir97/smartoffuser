@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header2 from "../components/Header2";
+import { handleChange } from "../utils/InputNumberValidation";
 const VerificationCOde = (props) => {
   useEffect(() => {
     console.log("props", props);
@@ -73,6 +74,10 @@ const VerificationCOde = (props) => {
                   </label>
                   <input
                     type="number"
+                    min={0}
+                    onChange={(e) => {
+                      handleChange(e, setcode);
+                    }}
                     className="form-control"
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
@@ -88,16 +93,18 @@ const VerificationCOde = (props) => {
                     className="form-check-label org-colr"
                     htmlFor="exampleCheck1"
                   >
-                      <Link
+                    <Link
                       to="#"
-                      onClick={resentCodeHandler} className="blue-head">
+                      onClick={resentCodeHandler}
+                      className="blue-head"
+                    >
                       {" "}
                       Not Received? Resend Again!
                     </Link>
                   </label>
                 </div>
                 <div className="mx-auto my-4 text-center">
-                   <Link
+                  <Link
                     to="#"
                     onClick={() =>
                       code?.length > 0
@@ -106,7 +113,9 @@ const VerificationCOde = (props) => {
                             "error",
                             `Please fill out all the required fields`
                           )
-                    } className="btn blue-btn2 ">
+                    }
+                    className="btn blue-btn2 "
+                  >
                     Continue
                   </Link>
                 </div>

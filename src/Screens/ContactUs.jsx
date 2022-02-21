@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { baseURL } from "../utils/api";
 import Toasty from "../utils/toast";
+import { validateEmail } from "../utils/ValidateEMail";
 
 const ContactUs = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -17,41 +18,48 @@ const ContactUs = ({ history }) => {
   const [email, setemail] = useState("");
 
   const submitHandler = async () => {
-    try {
-      const res = await axios.post(
-        `${baseURL}/feedback/create-feedback`,
-        {
-          firstName,
-          lastName,
-          subject,
-          message,
-          email,
-          type: "User"
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
+      try {
+        const res = await axios.post(
+          `${baseURL}/feedback/create-feedback`,
+          {
+            firstName,
+            lastName,
+            subject,
+            message,
+            email,
+            type: "User"
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`
+            }
           }
+        );
+        if (res?.status == 201) {
+          history?.push("/Dashboard");
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Form sent successfully",
+            showConfirmButton: false,
+            timer: 1500
+          });
         }
-      );
-      if (res?.status == 201) {
-        history?.push("/Dashboard");
+      } catch (error) {
         Swal.fire({
-          icon: "success",
+          icon: "error",
           title: "",
-          text: "Form sent successfully",
+          text: "Something went wrong",
           showConfirmButton: false,
           timer: 1500
         });
       }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "",
-        text: "Something went wrong",
-        showConfirmButton: false,
-        timer: 1500
-      });
+    } else {
+      Toasty("error", `Please enter a valid email`);
     }
   };
   return (
@@ -59,7 +67,7 @@ const ContactUs = ({ history }) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <Link to='/Dashboard'>
+            <Link to="/Dashboard">
               <i className="fas fa-chevron-left arow-l" />
             </Link>
             <h4 className="for-head-h4">Contact Us</h4>

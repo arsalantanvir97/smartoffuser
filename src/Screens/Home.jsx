@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Header2 from "../components/Header2";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Home = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -204,9 +205,9 @@ const Home = ({ history }) => {
                       Lorem Ipsum Is Simply Dummy Text Of The Printing And
                       Typesetting Industry.
                     </p>
-                    <a href="#" className="blue-btn my-4">
+                    <Link to="#" className="blue-btn my-4">
                       Contact Us
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -302,9 +303,18 @@ const Home = ({ history }) => {
                       took a galley of type and scrambled it to make a type
                       specimen book.
                     </p>
-                    <a href="#" className="blue-btn my-4">
+                    <Link
+                      to="#"
+                      onClick={() => {
+                        window.open(
+                          `https://dev74.onlinetestingserver.com/smartoff/vendor/`,
+                          "_blank"
+                        );
+                      }}
+                      className="blue-btn my-4"
+                    >
                       Get Started
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
