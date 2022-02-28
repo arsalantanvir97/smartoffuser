@@ -2,29 +2,32 @@ import React,{useRef,useEffect} from 'react'
 import { VectorMap } from "react-jvectormap";
 
 const VectorMapp = ({printerdata}) => {
-  useEffect(() => {
-    setInterval(() => {
-      if (document.querySelector('.jvectormap-container')) {
-        let chart = document.querySelector('.jvectormap-container').firstChild;
-        if (Number(chart.getAttribute('height')) !== 600) {
-          console.log('setting chart size');
-          chart.setAttribute('height', 600);
-        }
-      }
-    }, 5);
-  }, []);
+ 
+  
     const map = useRef();
 console.log('printerdata',printerdata);
-const printlocation=   printerdata?.length>0&&
-printerdata.map(print=>{
+const printlocation =
+printerdata?.length > 0 &&
+printerdata.map((print) => {
   //   console.log('print.printergeolocation[0]',print.printergeolocation[0]);
-    return(
-  {
-          latLng: [print?.branchid?.geolocation[0],print?.branchid?.geolocation[1]],
-          name: print?.branchid?.city,
-          value: 20
-  })
-})
+  return {
+    latLng: [
+      print?.branchid?.geolocation[0],
+      print?.branchid?.geolocation[1]
+    ],
+    name: print?.branchid?.city,
+    value: 20
+  };
+});
+const onToolTipShow = (e, el, code) => {
+  console.log('e, el, code',e, );
+   // console.log(code, e, el)
+   // let allData = {...this.state.activeStateData, ...this.state.inactiveStateData}
+   // console.log(allData)
+   let content = "Country: " + el.html()
+    console.log('content',content);
+   return el.html(content)
+ }
 console.log('printlocation',printlocation);
     return (
         <VectorMap
@@ -36,7 +39,7 @@ console.log('printlocation',printlocation);
             stroke: "#383f47"
           }
         }}
-        
+        onRegionTipShow={onToolTipShow}
         series={{
           markers: [
             {

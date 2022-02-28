@@ -30,7 +30,7 @@ const SignUp = () => {
                   to="#"
                   onClick={() => {
                     window.open(
-                      `https://dev74.onlinetestingserver.com/smartoff/vendor/`,
+                      `https://smartoffprint.com/vendor/`,
                       "_blank"
                     );
                   }}

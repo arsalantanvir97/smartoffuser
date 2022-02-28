@@ -29,8 +29,8 @@ const ForgotPassword = ({ history }) => {
             timer: 1500
           });
           history.push({
-            pathname: "/verificationcode",
-            state: { email }
+            pathname: `/verificationcode${email}`,
+           
           });
         }
       } catch (error) {

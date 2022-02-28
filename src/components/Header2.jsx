@@ -25,15 +25,22 @@ const Header2 = () => {
             id="navbarNav"
           >
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link to="#" className="nav-link">
                   <i className="fas fa-phone blue-head" /> +012 345 6789
                 </Link>
-              </li>
+              </li> */}
               <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <i className="fas fa-envelope blue-head" />
-                  Email@example.com
+                <Link
+                  to="#"
+                  onClick={(e) => {
+                    window.location = "mailto:Info@smartoffprint.com";
+                    e.preventDefault();
+                  }}
+                  className="nav-link"
+                >
+                  <i className="fas fa-envelope blue-head mr-1" />
+                  Info@smartoffprint.com
                 </Link>
               </li>
             </ul>

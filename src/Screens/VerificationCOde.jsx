@@ -8,24 +8,23 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header2 from "../components/Header2";
 import { handleChange } from "../utils/InputNumberValidation";
-const VerificationCOde = (props) => {
-  useEffect(() => {
-    console.log("props", props);
-  }, [props]);
+import InputNumber from "../components/InputNumber";
+const VerificationCOde = ({match,history}) => {
+  
   const [code, setcode] = useState();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const onSubmitHandler = async () => {
     try {
-      console.log("body", code, props?.location?.state?.email);
-      const body = { code, email: props?.location?.state?.email };
+      console.log("body", code, match?.params?.email);
+      const body = { code, email: match?.params?.email };
       console.log("TEST");
       // try {
       const res = await api.post("/user/userverifyRecoverCode", body);
       console.log("res", res);
-      props?.history?.push({
+      history?.push({
         pathname: "/resetPassword",
-        state: { code: code, email: props?.location?.state?.email }
+        state: { code: code, email: match?.params?.email }
       });
     } catch (error) {
       console.log("error", error?.response);
@@ -33,9 +32,10 @@ const VerificationCOde = (props) => {
       Toasty("error", `🦄 ${error?.response?.data?.message}!`);
     }
   };
-  const resentCodeHandler = async () => {
-    console.log("resentCodeHandler");
-    const useremail = props?.location?.state?.email;
+
+  const resentCodeHandler = async (e) => {
+    e.preventDefault();
+    const useremail = match?.params?.email;
     const body = { email: useremail };
 
     try {
@@ -67,25 +67,17 @@ const VerificationCOde = (props) => {
               <p className="for-head-p text-left py-2">
                 Please Enter The Verification Code Sent To Your Email Address.
               </p>
-              <form className="loginform" action="login-home-page.php">
+              <form className="loginform">
                 <div className="form-group">
                   <label htmlFor="exampleInputEmail1">
                     Verification Code *
                   </label>
-                  <input
-                    type="number"
+                  <InputNumber
                     min={0}
-                    onChange={(e) => {
-                      handleChange(e, setcode);
-                    }}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter Verification Code"
                     value={code}
-                    onChange={(e) => {
-                      setcode(e.target.value);
-                    }}
+                    onChange={setcode}
+                    max={9}
+                    className="form-control "
                   />
                 </div>
                 <div className="form-group form-check d-flex justify-content-end">

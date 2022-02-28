@@ -10,6 +10,7 @@ const Profile = () => {
   const [lastName, setlastName] = useState("");
   const [image, setimage] = useState("");
   const [email, setemail] = useState("");
+  const [loading, setloading] = useState(false);
 
   const [is_edit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
@@ -27,17 +28,19 @@ const Profile = () => {
   }, [userInfo]);
 
   const updateProfileData = async (e) => {
-    if(firstName?.length>0 && lastName?.length>0){
-    const formData = new FormData();
+    setloading(true);
+    if (firstName?.length > 0 && lastName?.length > 0) {
+      const formData = new FormData();
 
-    formData.append("user_image", image);
-    formData.append("id", userInfo?._id);
-    formData.append("lastName", lastName);
-    formData.append("firstName", firstName);
+      formData.append("user_image", image);
+      formData.append("id", userInfo?._id);
+      formData.append("lastName", lastName);
+      formData.append("firstName", firstName);
 
-    await dispatch(updateUserInfoAction(formData));
-    setIsEdit(false);}
-    else {
+      await dispatch(updateUserInfoAction(formData));
+      setloading(false);
+      setIsEdit(false);
+    } else {
       Toasty("error", `Please fill out all the required fields`);
     }
   };
@@ -124,24 +127,27 @@ const Profile = () => {
                 <div className="col-md-6 col-12">
                   <p className="py-2">{userInfo?.email}</p>
                 </div>
+                {!loading && (
+                  <div className="col-lg-12 text-center py-2">
+                    <Link
+                      to="#"
+                      // aria-disabled={loading ? true : false}
+                      className="btn btn-primary blue-btn2"
+                      onClick={() => {
+                        if (!is_edit) {
+                          setIsEdit(true);
+                        } else {
+                          updateProfileData();
+                        }
+                      }}
+                    >
+                      {" "}
+                      {is_edit ? "Update" : "Edit"}
+                    </Link>
+                  </div>
+                )}
                 <div className="col-lg-12 text-center py-2">
-                  <Link
-                    to="#"
-                    className="btn btn-primary blue-btn2"
-                    onClick={() => {
-                      if (!is_edit) {
-                        setIsEdit(true);
-                      } else {
-                        updateProfileData();
-                      }
-                    }}
-                  >
-                    {" "}
-                    {is_edit ? "Update" : "Edit"}
-                  </Link>
-                </div>
-                <div className="col-lg-12 text-center py-2">
-                  <Link to='/' className="blue-head">
+                  <Link to="/ChangePassword" className="blue-head">
                     Change Password
                   </Link>
                 </div>

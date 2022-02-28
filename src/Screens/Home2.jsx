@@ -300,7 +300,7 @@ const Home2 = () => {
                       specimen book.
                     </p>
                     <Link to='#'  onClick={() => {
-                          window.open(`https://dev74.onlinetestingserver.com/smartoff/vendor/`, "_blank");
+                          window.open(`https://smartoffprint.com/vendor/`, "_blank");
                         }} className="blue-btn my-4">
                       Get Started
                     </Link>

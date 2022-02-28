@@ -10,6 +10,7 @@ import StripeCheckout from "react-stripe-checkout";
 import { closeModals } from "../utils/closeModals";
 import { handleChange } from "../utils/InputNumberValidation";
 import { SunspotLoader } from "react-awesome-loaders";
+import InputNumber from "../components/InputNumber";
 
 const MyDocument = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -631,7 +632,7 @@ const MyDocument = ({ history }) => {
                     <div className="form-group">
                       <label htmlFor="exampleInputEmail1">Enter Name *</label>
                       <input
-                        type="email"
+                        type="text"
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
@@ -662,6 +663,7 @@ const MyDocument = ({ history }) => {
                           </label>
                           <div className="file-inpt">
                             <input
+                              style={{ maxHeight: 19 }}
                               type="file"
                               accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
                               onChange={folderdocsHandler}
@@ -728,9 +730,10 @@ const MyDocument = ({ history }) => {
                               type="file"
                               accept=".xlsx,.xls,.doc,.docx,.ppt, .pptx,.txt,.pdf"
                               onChange={filedocsHandler}
+                              style={{ maxHeight: 19 }}
                             />
                             {/* <input type="file" onChange={filedocsHandler} /> */}
-                            <i className="fas fa-cloud-upload-alt" />
+                            <i className="fas fa-cloud-upload-alt" sty />
                           </div>
                         </div>
                         <button
@@ -783,7 +786,7 @@ const MyDocument = ({ history }) => {
                     <span aria-hidden="true">×</span>
                   </button>
                 </div>
-                <div className="modal-body text-center py-4">
+                <div className="modal-body text-center py-4" style={{paddingLeft:45}}>
                   <div className="row">
                     <div className="col-lg-6 text-left">
                       <div className="fields">
@@ -805,26 +808,21 @@ const MyDocument = ({ history }) => {
                           </select>
                         </div>
 
-                        <div className="f_wrap">
+                        <div className="f_wrap mt-3" >
                           <p>No. of Pages</p>
-                          <input
-                            type="number"
+                          <InputNumber
                             min={0}
-                            onChange={(e) => {
-                              handleChange(e, setpages);
-                            }}
-                            placeholder="Select page quantity"
                             value={pages}
-                            onChange={(e) => {
-                              setpages(e.target.value);
-                            }}
+                            onChange={setpages}
+                            max={9}
+                            className="form-control cutum-input mt-2"
                           />
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-lg-6 text-left">
+                    <div className="col-lg-6 text-left mt-4">
                       <div className="fields">
                         <div className="f_wrap">
                           <span>Select Type</span>

@@ -20,7 +20,7 @@ const Header = () => {
       <section className="for-header">
         <div className="container">
           <nav className="navbar navbar-expand-xl navbar-light">
-            <Link to="/Home" className="navbar-brand">
+            <Link to="/Dashboard" className="navbar-brand">
               <img src="assets/images/logo.png" alt="" />
             </Link>
             <button
@@ -182,6 +182,7 @@ const Header = () => {
                         style={{
                           width: "45px",
                           height: "52px",
+                          marginRight:9,
                         }}
                       >
                         <img
@@ -191,6 +192,7 @@ const Header = () => {
                               : "assets/images/usr.png"
                           }
                           style={{ width: "100%",
+                         
                             height: "100%",
                         borderRadius:'50px'
                         }}

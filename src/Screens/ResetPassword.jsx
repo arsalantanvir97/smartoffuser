@@ -9,6 +9,8 @@ const ResetPassword = (props) => {
 
   const [password, setpassword] = useState();
   const [confirm_password, setconfirm_password] = useState();
+  const [showicon, setshowicon] = useState(true);
+  const [showicon2, setshowicon2] = useState(true);
 
   const onSubmitHandler = () => {
     console.log(
@@ -39,33 +41,49 @@ const ResetPassword = (props) => {
               <p className="for-head-p text-left py-2">
                 Please Enter New Password
               </p>
-              <form className="loginform" action="login-home-page.php">
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1">New Password *</label>
+              <form className="loginform" >
+              <div className=" form-group mb-2 form-field">
+                  <label htmlFor="exampleInputPassword1">New Password *</label>
                   <input
-                    type="password"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter New Password"
+                   type={showicon ? "password" : "text"}
+                    className="form-control site-input right-icon enter-input"
+                    id="exampleInputPassword1"
+                    placeholder="New Password"
                     value={password}
                     onChange={(e) => {
                       setpassword(e.target.value);
                     }}
                   />
+                  <i
+                    onClick={() => setshowicon(!showicon)}
+                    className={
+                      showicon
+                        ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                        : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                    }
+                    aria-hidden="true"
+                  />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1">Confirm Password *</label>
+                <div className=" form-group mb-2 form-field">
+                  <label htmlFor="exampleInputPassword1">Confrim Password *</label>
                   <input
-                    type="password"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
+                      type={showicon2 ? "password" : "text"}
+                    className="form-control site-input right-icon enter-input"
+                    id="exampleInputPassword1"
                     placeholder="Confirm Password"
                     value={confirm_password}
                     onChange={(e) => {
                       setconfirm_password(e.target.value);
                     }}
+                  />
+                  <i
+                    onClick={() => setshowicon2(!showicon2)}
+                    className={
+                      showicon2
+                        ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                        : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                    }
+                    aria-hidden="true"
                   />
                 </div>
                 <button

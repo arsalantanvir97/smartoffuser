@@ -11,6 +11,8 @@ const Login = ({ history }) => {
   const dispatch = useDispatch();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [showicon, setshowicon] = useState(true);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -19,11 +21,11 @@ const Login = ({ history }) => {
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
-    console.log("submitHandler");
-    dispatch(userLoginAction(email, password, history));
-  } else {
-    Toasty("error", `Please enter a valid email`);
-  }
+      console.log("submitHandler");
+      dispatch(userLoginAction(email, password, history));
+    } else {
+      Toasty("error", `Please enter a valid email`);
+    }
   };
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const Login = ({ history }) => {
               </p>
               <form className="loginform">
                 <div className="form-group">
-                  <label htmlFor="exampleInputEmail1">Email address</label>
+                  <label htmlFor="exampleInputEmail1">Email address *</label>
                   <input
                     type="email"
                     className="form-control"
@@ -57,11 +59,11 @@ const Login = ({ history }) => {
                     }}
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1">Password</label>
+                <div className=" form-group mb-2 form-field">
+                  <label htmlFor="exampleInputPassword1">Password*</label>
                   <input
-                    type="password"
-                    className="form-control"
+                   type={showicon ? "password" : "text"}
+                    className="form-control site-input right-icon enter-input"
                     id="exampleInputPassword1"
                     placeholder="Enter Password"
                     value={password}
@@ -69,7 +71,17 @@ const Login = ({ history }) => {
                       setpassword(e.target.value);
                     }}
                   />
+                  <i
+                    onClick={() => setshowicon(!showicon)}
+                    className={
+                      showicon
+                        ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                        : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                    }
+                    aria-hidden="true"
+                  />
                 </div>
+
                 <div className="form-group form-check d-flex justify-content-between">
                   {/* <input
                     type="checkbox"
@@ -106,7 +118,7 @@ const Login = ({ history }) => {
                 >
                   Login
                 </button>
-                <div className="text-center">
+                <div className="text-center mt-4">
                   <Link to="/SignUp" className="login-ristr">
                     New Here?{" "}
                     <span className="blue-head"> Register Your Account</span>

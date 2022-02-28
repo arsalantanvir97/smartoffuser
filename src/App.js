@@ -20,19 +20,23 @@ import PrintingLogsView from "./Screens/PrintingLogsView";
 import MyDocument from "./Screens/MyDocument";
 import MyDocumentView from "./Screens/MyDocumentView";
 import Notification from "./Screens/Notification";
+import Footer from "./components/Footer";
+import ChangePassword from "./Screens/ChangePassword";
 
 const App = () => {
   return (
-    <Router basename="/smartoff/user">
+    <Router basename="/">
       <Route path="/" component={Home} exact />
       <Route path="/Login" component={Login} exact />
       <Route path="/SignUp" component={SignUp} exact />
       <Route path="/SignUp2" component={SignUp2} exact />
       <Route path="/forgotpassword" component={ForgotPassword} exact />
-      <Route path="/verificationcode" component={VerificationCOde} exact />
+      <Route path="/verificationcode:email" component={VerificationCOde} exact />
       <Route path="/resetPassword" component={ResetPassword} exact />
 
       <PrivateRoute exact path="/Home" component={Home2} />
+      <PrivateRoute exact path="/ChangePassword" component={ChangePassword} />
+
       <PrivateRoute exact path="/Dashboard" component={Dashboard} />
       <PrivateRoute exact path="/Profile" component={Profile} />
       <PrivateRoute exact path="/LocatePrinter" component={LocatePrinter} />
@@ -59,6 +63,7 @@ const App = () => {
         component={PrintingLogsView}
       />
       <PrivateRoute exact path="/MyDocument" component={MyDocument} />
+      <Footer/>
     </Router>
   );
 };

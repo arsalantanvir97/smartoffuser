@@ -42,9 +42,13 @@ useEffect(() => {
             <h4 className="for-head-h4">Locate Printers</h4>
           </div>
         </div>
-        <div className="row text-center">
+        <div
+                              // className="row text-center"
+                              style={{ width: "100%", height: "100vh" }}
+                            >
           <VectorMapp  printerdata={machines} />
         </div>
+        
       </div>
     </section>
   );

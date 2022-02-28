@@ -7,8 +7,8 @@ if (window.location.hostname == "localhost") {
   baseURL = "https://localhost:5051/api";
   imageURL = "https://localhost:5051/";
 } else {
-  baseURL = "https://dev74.onlinetestingserver.com:5051/api";
-  imageURL = "https://dev74.onlinetestingserver.com:5051/";
+  baseURL = "https://smartoffprint.com:5051/api";
+  imageURL = "https://smartoffprint.com:5051/";
 }
 
 const api = axios.create({

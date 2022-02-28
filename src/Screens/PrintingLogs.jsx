@@ -110,7 +110,7 @@ const PrintingLogs = () => {
           </div>
         </div>
         <div className="table-responsive">
-          <table className="table">
+          <table className="table" style={{backgroundColor:'white'}}>
             <thead>
               <tr>
                 <th>S.no</th>

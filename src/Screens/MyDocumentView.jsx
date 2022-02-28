@@ -11,6 +11,7 @@ import Loading from "../components/Loading";
 import { closeModals } from "../utils/closeModals";
 import { handleChange } from "../utils/InputNumberValidation";
 import { SunspotLoader } from "react-awesome-loaders";
+import InputNumber from "../components/InputNumber";
 
 const MyDocumentView = ({ match, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -550,17 +551,12 @@ const MyDocumentView = ({ match, history }) => {
 
                         <div className="f_wrap">
                           <p>No. of Pages</p>
-                          <input
-                            type="number"
+                          <InputNumber
                             min={0}
-                            onChange={(e) => {
-                              handleChange(e, setpages);
-                            }}
-                            placeholder="Select page quantity"
                             value={pages}
-                            onChange={(e) => {
-                              setpages(e.target.value);
-                            }}
+                            onChange={setprintData}
+                            max={9}
+                            className="form-control "
                           />
                         </div>
                       </div>

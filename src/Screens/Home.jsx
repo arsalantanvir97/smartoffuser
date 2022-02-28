@@ -24,7 +24,7 @@ const Home = ({ history }) => {
             />
           </a>
         </section>
-        <section className="it-work">
+        <section className="it-work mt-3">
           <div className="container">
             <div className="row">
               <div className="col-lg-12">
@@ -110,14 +110,14 @@ const Home = ({ history }) => {
                       <i className="fas fa-caret-right" />
                     </div>
                   </div>
-                  <a
-                    href="#"
-                    className="all-services wow animate__animated animate__fadeInUp"
+                  <Link
+                    to='#'
+                    className="all-services wow animate__animated animate__fadeInUp mb-3"
                     data-wow-duration="1.3s"
                     data-wow-delay="0.7s"
                   >
                     VIEW ALL SERVICES
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-lg-8 col-md-12 col-12">
@@ -307,7 +307,7 @@ const Home = ({ history }) => {
                       to="#"
                       onClick={() => {
                         window.open(
-                          `https://dev74.onlinetestingserver.com/smartoff/vendor/`,
+                          `https://smartoffprint.com/vendor/`,
                           "_blank"
                         );
                       }}
