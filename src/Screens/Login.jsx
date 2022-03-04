@@ -12,19 +12,24 @@ const Login = ({ history }) => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [showicon, setshowicon] = useState(true);
+  const [loading, setloading] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     const emailvalidation = validateEmail(email);
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
+      setloading(true);
+
       console.log("submitHandler");
-      dispatch(userLoginAction(email, password, history));
+      await dispatch(userLoginAction(email, password, history));
+      setloading(false);
     } else {
       Toasty("error", `Please enter a valid email`);
+      setloading(false);
     }
   };
 
@@ -62,7 +67,7 @@ const Login = ({ history }) => {
                 <div className=" form-group mb-2 form-field">
                   <label htmlFor="exampleInputPassword1">Password*</label>
                   <input
-                   type={showicon ? "password" : "text"}
+                    type={showicon ? "password" : "text"}
                     className="form-control site-input right-icon enter-input"
                     id="exampleInputPassword1"
                     placeholder="Enter Password"
@@ -119,10 +124,14 @@ const Login = ({ history }) => {
                   Login
                 </button>
                 <div className="text-center mt-4">
-                  <Link to="/SignUp" className="login-ristr">
-                    New Here?{" "}
-                    <span className="blue-head"> Register Your Account</span>
-                  </Link>
+                  {!loading ? (
+                    <Link to="/SignUp" className="login-ristr">
+                      New Here?{" "}
+                      <span className="blue-head"> Register Your Account</span>
+                    </Link>
+                  ) : (
+                    <i className="fas fa-spinner fa-pulse"></i>
+                  )}
                 </div>
               </form>
             </div>

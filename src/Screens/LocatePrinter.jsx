@@ -1,22 +1,22 @@
-import axios from 'axios';
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { baseURL } from '../utils/api';
-import VectorMapp from '../components/VectorMapp';
+import { baseURL } from "../utils/api";
+import VectorMapp from "../components/VectorMapp";
 import { Link } from "react-router-dom";
 
 const LocatePrinter = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-const [machines, setmachines] = useState([])
-useEffect(() => {
-  onSubmitHandler()
-}, [])
+  const [machines, setmachines] = useState([]);
+  useEffect(() => {
+    onSubmitHandler();
+  }, []);
   const onSubmitHandler = async () => {
     try {
       const res = await axios.get(
         `${baseURL}/requestmachine/getRequestMachine`,
-      
+
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`
@@ -24,12 +24,10 @@ useEffect(() => {
         }
       );
       if (res?.status == 201) {
-        console.log('res',res?.data);
-        setmachines(res?.data?.requestmachine)
+        console.log("res", res?.data);
+        setmachines(res?.data?.requestmachine);
       }
-    } catch (error) {
-    
-    }
+    } catch (error) {}
   };
   return (
     <section className="board">
@@ -43,12 +41,11 @@ useEffect(() => {
           </div>
         </div>
         <div
-                              // className="row text-center"
-                              style={{ width: "100%", height: "100vh" }}
-                            >
-          <VectorMapp  printerdata={machines} />
+          // className="row text-center"
+          style={{ width: "100%", height: "100vh" }}
+        >
+          <VectorMapp printerdata={machines} />
         </div>
-        
       </div>
     </section>
   );

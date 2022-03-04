@@ -22,6 +22,7 @@ const SignUp2 = ({ history }) => {
   const [confirmpassword, setconfirmpassword] = useState("");
   const [showicon, setshowicon] = useState(true);
   const [showicon2, setshowicon2] = useState(true);
+  const [loading, setloading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -30,6 +31,8 @@ const SignUp2 = ({ history }) => {
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
+      setloading(true);
+
       const body = {
         firstName,
         confirmpassword,
@@ -39,7 +42,10 @@ const SignUp2 = ({ history }) => {
       };
       console.log("body", body);
       await dispatch(userSignUpAction(body, history));
+      setloading(false);
     } else {
+      setloading(false);
+
       Toasty("error", `Please enter a valid email`);
     }
   };
@@ -143,24 +149,29 @@ const SignUp2 = ({ history }) => {
                     aria-hidden="true"
                   />
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-primary blue-btn2 d-flex m-auto"
-                  onClick={() =>
-                    firstName?.length > 0 &&
-                    email?.length > 0 &&
-                    confirmpassword?.length > 0 &&
-                    password?.length > 0 &&
-                    lastName?.length > 0
-                      ? registerUserHandler()
-                      : Toasty(
-                          "error",
-                          `Please fill out all the required fields`
-                        )
-                  }
-                >
-                  Sign Up
-                </button>
+                {!loading ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary blue-btn2 d-flex m-auto"
+                    onClick={() =>
+                      firstName?.length > 0 &&
+                      email?.length > 0 &&
+                      confirmpassword?.length > 0 &&
+                      password?.length > 0 &&
+                      lastName?.length > 0
+                        ? registerUserHandler()
+                        : Toasty(
+                            "error",
+                            `Please fill out all the required fields`
+                          )
+                    }
+                  >
+                    Sign Up
+                  </button>
+                ) : (
+                  <i className="fas fa-spinner fa-pulse"></i>
+                )}
+
                 <div className="text-center py-4">
                   <Link to="/Login" className="login-ristr">
                     Already have an Account?{" "}

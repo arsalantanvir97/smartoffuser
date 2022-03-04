@@ -28,8 +28,8 @@ const Profile = () => {
   }, [userInfo]);
 
   const updateProfileData = async (e) => {
-    setloading(true);
     if (firstName?.length > 0 && lastName?.length > 0) {
+      setloading(true);
       const formData = new FormData();
 
       formData.append("user_image", image);
@@ -42,6 +42,7 @@ const Profile = () => {
       setIsEdit(false);
     } else {
       Toasty("error", `Please fill out all the required fields`);
+      setloading(false);
     }
   };
   return (
@@ -127,8 +128,8 @@ const Profile = () => {
                 <div className="col-md-6 col-12">
                   <p className="py-2">{userInfo?.email}</p>
                 </div>
-                {!loading && (
-                  <div className="col-lg-12 text-center py-2">
+                <div className="col-lg-12 text-center py-2">
+                  {!loading ? (
                     <Link
                       to="#"
                       // aria-disabled={loading ? true : false}
@@ -144,8 +145,10 @@ const Profile = () => {
                       {" "}
                       {is_edit ? "Update" : "Edit"}
                     </Link>
-                  </div>
-                )}
+                  ) : (
+                    <i className="fas fa-spinner fa-pulse"></i>
+                  )}
+                </div>
                 <div className="col-lg-12 text-center py-2">
                   <Link to="/ChangePassword" className="blue-head">
                     Change Password

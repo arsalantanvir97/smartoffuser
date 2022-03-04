@@ -10,15 +10,21 @@ import { validateEmail } from "../utils/ValidateEMail";
 
 const ForgotPassword = ({ history }) => {
   const [email, setemail] = useState("");
+  const [loading, setloading] = useState(false);
+
   const submitHandler = async () => {
     const emailvalidation = validateEmail(email);
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
       const body = { email };
+      setloading(true);
+
       console.log("TEST");
       try {
         const res = await api.post("/user/userRecoverPassword", body);
+        setloading(false);
+
         console.log("res", res);
         if (res?.status == 201) {
           Swal.fire({
@@ -29,16 +35,19 @@ const ForgotPassword = ({ history }) => {
             timer: 1500
           });
           history.push({
-            pathname: `/verificationcode${email}`,
-           
+            pathname: `/verificationcode${email}`
           });
         }
       } catch (error) {
+        setloading(false);
+
         console.log("IN HERE");
         console.log(error?.response?.data);
         Toasty("error", `🦄 Invalid Email!`);
       }
     } else {
+      setloading(false);
+
       Toasty("error", `Please enter a valid email`);
     }
   };
@@ -71,20 +80,24 @@ const ForgotPassword = ({ history }) => {
                 </div>
                 {/* <button type="button" class="btn btn-primary blue-btn2 d-flex mx-auto my-4">Continue</button> */}
                 <div className="mx-auto my-4 text-center">
-                  <Link
-                    to="#"
-                    onClick={() =>
-                      email?.length > 0
-                        ? submitHandler()
-                        : Toasty(
-                            "error",
-                            `Please fill out all the required fields`
-                          )
-                    }
-                    className="btn blue-btn2 "
-                  >
-                    Continue
-                  </Link>
+                  {!loading ? (
+                    <Link
+                      to="#"
+                      onClick={() =>
+                        email?.length > 0
+                          ? submitHandler()
+                          : Toasty(
+                              "error",
+                              `Please fill out all the required fields`
+                            )
+                      }
+                      className="btn blue-btn2 "
+                    >
+                      Continue
+                    </Link>
+                  ) : (
+                    <i className="fas fa-spinner fa-pulse"></i>
+                  )}
                 </div>
                 <div className="text-center">
                   <Link to="/Login" className="login-ristr">

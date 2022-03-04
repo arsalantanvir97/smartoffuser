@@ -24,7 +24,7 @@ const Home = ({ history }) => {
             />
           </a>
         </section>
-        <section className="it-work mt-3">
+        <section className="it-work mt-4">
           <div className="container">
             <div className="row">
               <div className="col-lg-12">

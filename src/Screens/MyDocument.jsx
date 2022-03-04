@@ -16,6 +16,7 @@ const MyDocument = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [loading, setloading] = useState(false);
+  const [showloading, setshowloading] = useState(false);
 
   const [folderName, setfolderName] = useState("");
   const [doc_schedule, setdoc_schedule] = useState("");
@@ -786,7 +787,10 @@ const MyDocument = ({ history }) => {
                     <span aria-hidden="true">×</span>
                   </button>
                 </div>
-                <div className="modal-body text-center py-4" style={{paddingLeft:45}}>
+                <div
+                  className="modal-body text-center py-4"
+                  style={{ paddingLeft: 45 }}
+                >
                   <div className="row">
                     <div className="col-lg-6 text-left">
                       <div className="fields">
@@ -808,7 +812,7 @@ const MyDocument = ({ history }) => {
                           </select>
                         </div>
 
-                        <div className="f_wrap mt-3" >
+                        <div className="f_wrap mt-3">
                           <p>No. of Pages</p>
                           <InputNumber
                             min={0}

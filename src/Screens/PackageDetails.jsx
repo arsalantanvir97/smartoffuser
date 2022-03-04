@@ -156,12 +156,16 @@ const PackageDetails = ({ match, history }) => {
                           </div>
                         ))}
                       <div style={{ height: 20 }}></div>
-                      <StripeCheckout
-                        stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
-                        token={handleToken}
-                        amount={packagedetails?.amount * 100}
-                        email={userInfo?.email}
-                      ></StripeCheckout>
+                      {!loading ? (
+                        <StripeCheckout
+                          stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
+                          token={handleToken}
+                          amount={packagedetails?.amount * 100}
+                          email={userInfo?.email}
+                        ></StripeCheckout>
+                      ) : (
+                        <i className="fas fa-spinner fa-pulse"></i>
+                      )}
                       {/* <a href="#" className="blue-btn my-4" data-dismiss="modal" data-toggle="modal" data-target="#packg">Choose
                     Plan</a> */}
                     </div>

@@ -9,24 +9,29 @@ import Swal from "sweetalert2";
 import Header2 from "../components/Header2";
 import { handleChange } from "../utils/InputNumberValidation";
 import InputNumber from "../components/InputNumber";
-const VerificationCOde = ({match,history}) => {
-  
+const VerificationCOde = ({ match, history }) => {
+  const [loading, setloading] = useState(false);
+
   const [code, setcode] = useState();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const onSubmitHandler = async () => {
     try {
+      setloading(true);
       console.log("body", code, match?.params?.email);
       const body = { code, email: match?.params?.email };
       console.log("TEST");
       // try {
       const res = await api.post("/user/userverifyRecoverCode", body);
+      setloading(false);
       console.log("res", res);
       history?.push({
         pathname: "/resetPassword",
         state: { code: code, email: match?.params?.email }
       });
     } catch (error) {
+      setloading(false);
+
       console.log("error", error?.response);
       // alert(error?.response?.data?.message)
       Toasty("error", `🦄 ${error?.response?.data?.message}!`);
@@ -96,20 +101,24 @@ const VerificationCOde = ({match,history}) => {
                   </label>
                 </div>
                 <div className="mx-auto my-4 text-center">
-                  <Link
-                    to="#"
-                    onClick={() =>
-                      code?.length > 0
-                        ? onSubmitHandler()
-                        : Toasty(
-                            "error",
-                            `Please fill out all the required fields`
-                          )
-                    }
-                    className="btn blue-btn2 "
-                  >
-                    Continue
-                  </Link>
+                  {!loading ? (
+                    <Link
+                      to="#"
+                      onClick={() =>
+                        code?.length > 0
+                          ? onSubmitHandler()
+                          : Toasty(
+                              "error",
+                              `Please fill out all the required fields`
+                            )
+                      }
+                      className="btn blue-btn2 "
+                    >
+                      Continue
+                    </Link>
+                  ) : (
+                    <i className="fas fa-spinner fa-pulse"></i>
+                  )}
                 </div>
                 <div className="text-center">
                   <Link to="/Login" className="login-ristr">

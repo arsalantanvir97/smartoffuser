@@ -28,7 +28,7 @@ const Footer = () => {
               </Link>
             </div>
             <div className="col-lg-12">
-              <span>Copyright 2021 Smart Off. All Right Reserved</span>
+              <span>Copyright 2022 Smart Off. All Right Reserved</span>
             </div>
           </div>
         </div>

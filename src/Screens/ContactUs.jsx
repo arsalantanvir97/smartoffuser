@@ -10,6 +10,7 @@ import { validateEmail } from "../utils/ValidateEMail";
 const ContactUs = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const [loading, setloading] = useState(false);
 
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
@@ -22,6 +23,7 @@ const ContactUs = ({ history }) => {
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
+      setloading(true);
       try {
         const res = await axios.post(
           `${baseURL}/feedback/create-feedback`,
@@ -39,6 +41,7 @@ const ContactUs = ({ history }) => {
             }
           }
         );
+        setloading(false);
         if (res?.status == 201) {
           history?.push("/Dashboard");
           Swal.fire({
@@ -50,6 +53,7 @@ const ContactUs = ({ history }) => {
           });
         }
       } catch (error) {
+        setloading(false);
         Swal.fire({
           icon: "error",
           title: "",
@@ -59,6 +63,7 @@ const ContactUs = ({ history }) => {
         });
       }
     } else {
+      setloading(false);
       Toasty("error", `Please enter a valid email`);
     }
   };
@@ -150,6 +155,7 @@ const ContactUs = ({ history }) => {
               </form>
             </div>
             <div className="col-lg-12 text-center py-2">
+            {!loading ? (
               <Link
                 to="#"
                 onClick={() =>
@@ -164,7 +170,9 @@ const ContactUs = ({ history }) => {
                 className="btn btn-primary blue-btn2"
               >
                 Submit
-              </Link>
+              </Link> ) : (
+                          <i className="fas fa-spinner fa-pulse"></i>
+                        )}
             </div>
           </div>
         </div>

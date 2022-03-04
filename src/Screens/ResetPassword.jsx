@@ -6,13 +6,15 @@ import Header2 from "../components/Header2";
 import Toasty from "../utils/toast";
 const ResetPassword = (props) => {
   const dispatch = useDispatch();
+  const [loading, setloading] = useState(false);
 
   const [password, setpassword] = useState();
   const [confirm_password, setconfirm_password] = useState();
   const [showicon, setshowicon] = useState(true);
   const [showicon2, setshowicon2] = useState(true);
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async () => {
+    setloading(true);
     console.log(
       "body",
       password,
@@ -21,7 +23,7 @@ const ResetPassword = (props) => {
       props?.location?.state?.email
     );
 
-    dispatch(
+    await dispatch(
       userResetPasswordAction(
         password,
         confirm_password,
@@ -29,6 +31,7 @@ const ResetPassword = (props) => {
         props?.location?.state?.email
       )
     );
+    setloading(false);
   };
   return (
     <>
@@ -41,11 +44,11 @@ const ResetPassword = (props) => {
               <p className="for-head-p text-left py-2">
                 Please Enter New Password
               </p>
-              <form className="loginform" >
-              <div className=" form-group mb-2 form-field">
+              <form className="loginform">
+                <div className=" form-group mb-2 form-field">
                   <label htmlFor="exampleInputPassword1">New Password *</label>
                   <input
-                   type={showicon ? "password" : "text"}
+                    type={showicon ? "password" : "text"}
                     className="form-control site-input right-icon enter-input"
                     id="exampleInputPassword1"
                     placeholder="New Password"
@@ -65,9 +68,11 @@ const ResetPassword = (props) => {
                   />
                 </div>
                 <div className=" form-group mb-2 form-field">
-                  <label htmlFor="exampleInputPassword1">Confrim Password *</label>
+                  <label htmlFor="exampleInputPassword1">
+                    Confrim Password *
+                  </label>
                   <input
-                      type={showicon2 ? "password" : "text"}
+                    type={showicon2 ? "password" : "text"}
                     className="form-control site-input right-icon enter-input"
                     id="exampleInputPassword1"
                     placeholder="Confirm Password"
@@ -86,22 +91,26 @@ const ResetPassword = (props) => {
                     aria-hidden="true"
                   />
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-primary blue-btn2 d-flex mx-auto my-4"
-                  data-toggle="modal"
-                  data-target="#exampleModal"
-                  onClick={() =>
-                    confirm_password?.length > 0 && password?.length > 0
-                      ? onSubmitHandler()
-                      : Toasty(
-                          "error",
-                          `Please fill out all the required fields`
-                        )
-                  }
-                >
-                  Update
-                </button>
+                {!loading ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary blue-btn2 d-flex mx-auto my-4"
+                    data-toggle="modal"
+                    data-target="#exampleModal"
+                    onClick={() =>
+                      confirm_password?.length > 0 && password?.length > 0
+                        ? onSubmitHandler()
+                        : Toasty(
+                            "error",
+                            `Please fill out all the required fields`
+                          )
+                    }
+                  >
+                    Update
+                  </button>
+                ) : (
+                  <i className="fas fa-spinner fa-pulse"></i>
+                )}
                 <div className="text-center">
                   <Link to="/Login" className="login-ristr">
                     Back to Login
