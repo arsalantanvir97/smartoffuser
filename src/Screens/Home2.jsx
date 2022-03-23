@@ -1,11 +1,42 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import ServicesSlider from "../components/ServicesSlider";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
+import { baseURL } from "../utils/api";
 
-const Home2 = () => {
+const Home2 = ({ history }) => {
+  const [services, setservices] = useState([]);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  useEffect(() => {
+    if (userInfo) {
+      userInfo?.subscription==null ? SubscriptionAuthorization(history) : history.replace("/Home");
+    } 
+    
+  }, []);
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     userInfo?.subscription == null
+  //       ? SubscriptionAuthorization()
+  //       : history.replace("/Home");
+  //   }
+  // }, [userInfo]);
+
+  const getServices = async () => {
+    try {
+      const res = await axios.get(`${baseURL}/user/getServices`);
+      setservices(res?.data?.services);
+      console.log("servicesres", res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getServices();
+  }, []);
   return (
     <>
       <div>
@@ -83,105 +114,11 @@ const Home2 = () => {
                   >
                     AVAILABLE <br /> SERVICES
                   </h5>
-                  <span
-                    className="wow animate__animated animate__fadeInDown"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.7s"
-                  >
-                    Lorem Ipsum is simply dummy text of <br /> the printing and
-                    typesetting industry. <br /> Lorem Ipsum
-                  </span>
-                  <div
-                    id="test"
-                    className="wow animate__animated animate__fadeInUp"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.7s"
-                  >
-                    <div className="mmprev btn-prev mr-2">
-                      <i className="fas fa-caret-left" />
-                    </div>
-                    <div className="mmnext btn-next ml-2">
-                      <i className="fas fa-caret-right" />
-                    </div>
-                  </div>
-                  <a
-                    href="#"
-                    className="all-services wow animate__animated animate__fadeInUp"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.7s"
-                  >
-                    VIEW ALL SERVICES
-                  </a>
+                  {services?.length>0 &&
+                  <ServicesSlider services={services} />}
                 </div>
               </div>
-              <div className="col-lg-8 col-md-12 col-12">
-                <div className="services owl-carousel owl-theme">
-                  <div
-                    className="item wow animate__animated animate__zoomIn"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.3s"
-                  >
-                    <div className="card for-no-bg">
-                      <img
-                        src="assets/images/new.png"
-                        className="card-img-top"
-                        alt="..."
-                      />
-                      <div className="card-body text-center">
-                        <h5 className="card-title">ABC Service</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="item wow animate__animated animate__zoomIn"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.5s"
-                  >
-                    <div className="card for-no-bg">
-                      <img
-                        src="assets/images/slider-2.png"
-                        className="card-img-top"
-                        alt="..."
-                      />
-                      <div className="card-body text-center">
-                        <h5 className="card-title">ABC Service</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="item wow animate__animated animate__zoomIn"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.7s"
-                  >
-                    <div className="card for-no-bg">
-                      <img
-                        src="assets/images/slider-3.png"
-                        className="card-img-top"
-                        alt="..."
-                      />
-                      <div className="card-body text-center">
-                        <h5 className="card-title">ABC ServiceE</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="item wow animate__animated animate__zoomIn"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.9s"
-                  >
-                    <div className="card for-no-bg">
-                      <img
-                        src="assets/images/new.png"
-                        className="card-img-top"
-                        alt="..."
-                      />
-                      <div className="card-body text-center">
-                        <h5 className="card-title">ABC Service</h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+           
             </div>
           </div>
         </div>
@@ -199,7 +136,7 @@ const Home2 = () => {
                       Lorem Ipsum Is Simply Dummy Text Of The Printing And
                       Typesetting Industry.
                     </p>
-                    <Link to='#' className="blue-btn my-4">
+                    <Link to="#" className="blue-btn my-4">
                       Contact Us
                     </Link>
                   </div>
@@ -265,9 +202,7 @@ const Home2 = () => {
                           animationDuration: "1.3s",
                           animationDelay: "0.3s",
                           animationName: "fadeInDown"
-                          
                         }}
-                       
                       >
                         Become a <span className="blue-head"> Vendor?</span>
                       </h4>
@@ -299,9 +234,16 @@ const Home2 = () => {
                       took a galley of type and scrambled it to make a type
                       specimen book.
                     </p>
-                    <Link to='#'  onClick={() => {
-                          window.open(`https://smartoffprint.com/vendor/`, "_blank");
-                        }} className="blue-btn my-4">
+                    <Link
+                      to="#"
+                      onClick={() => {
+                        window.open(
+                          `https://smartoffprint.com/vendor/`,
+                          "_blank"
+                        );
+                      }}
+                      className="blue-btn my-4"
+                    >
                       Get Started
                     </Link>
                   </div>

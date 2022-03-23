@@ -7,7 +7,6 @@ import Toasty from "../utils/toast";
 const ResetPassword = (props) => {
   const dispatch = useDispatch();
   const [loading, setloading] = useState(false);
-
   const [password, setpassword] = useState();
   const [confirm_password, setconfirm_password] = useState();
   const [showicon, setshowicon] = useState(true);

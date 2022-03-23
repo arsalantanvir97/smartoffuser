@@ -7,8 +7,9 @@ import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import Pagination from "../components/Padgination";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
-const PrintingLogs = () => {
+const PrintingLogs = ({history}) => {
   const [page, setPage] = useState(1);
 
   const [perPage, setPerPage] = useState(10);
@@ -22,7 +23,12 @@ const PrintingLogs = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+ useEffect(() => {
+    if (userInfo) {
+      userInfo?.subscription==null && SubscriptionAuthorization(history) ;
+    } 
+    
+  }, []);
   useEffect(() => {
     getPrintsLogs();
   }, [page, perPage, from, to, status, searchString, rerender]);

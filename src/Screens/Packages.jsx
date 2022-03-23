@@ -3,11 +3,15 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { baseURL } from "../utils/api";
 import { Link } from "react-router-dom";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
 const Packages = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [packages, setpackages] = useState([]);
+ 
+ 
+
   useEffect(() => {
     onSubmitHandler();
   }, []);
@@ -48,9 +52,12 @@ const Packages = () => {
               <div className="col-lg-3">
                 <div className="card work-card2">
                   <div className="card-body text-center">
-                    <h4 className="card-title for-head-h4">{pack?.packagename}</h4>
+                    <h4 className="card-title for-head-h4">
+                      {pack?.packagename}
+                    </h4>
                     <h4 className="card-title blue-head for-head-h4">
-                      <sup>$</sup>{pack?.amount}
+                      <sup>$</sup>
+                      {pack?.amount}
                     </h4>
                     <div className="media">
                       <img
@@ -59,7 +66,9 @@ const Packages = () => {
                         alt="..."
                       />
                       <div className="media-body">
-                        <h6 className="mt-0 text-left">{pack?.duration} Days</h6>
+                        <h6 className="mt-0 text-left">
+                          {pack?.duration} Days
+                        </h6>
                       </div>
                     </div>
                     <div className="media">
@@ -69,12 +78,16 @@ const Packages = () => {
                         alt="..."
                       />
                       <div className="media-body">
-                        {pack?.Features?.length>0 && pack?.Features?.map(feat=>(
-                        <h6 className="mt-0 text-left">Feature {feat}</h6>
-                        ))}
+                        {pack?.Features?.length > 0 &&
+                          pack?.Features?.map((feat) => (
+                            <h6 className="mt-0 text-left">Feature {feat}</h6>
+                          ))}
                       </div>
                     </div>
-                    <Link to={`/PackageDetails${pack?._id}`} className="blue-btn my-4">
+                    <Link
+                      to={`/PackageDetails${pack?._id}`}
+                      className="blue-btn my-4"
+                    >
                       View Details
                     </Link>
                   </div>

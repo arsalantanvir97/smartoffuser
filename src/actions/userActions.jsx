@@ -33,7 +33,7 @@ export const userSignUpAction = (body, history) => async (dispatch) => {
     });
 
     localStorage.setItem("userInfo", JSON.stringify(res?.data));
-    history?.replace("/Home");
+    history?.replace("/Packages");
   } catch (error) {
     console.log("error", error);
     Toasty("error", error?.response?.data?.message);
@@ -62,7 +62,7 @@ export const userLoginAction =
         });
 
         localStorage.setItem("userInfo", JSON.stringify(res?.data));
-        history?.replace("/Home");
+        history?.replace("/Packages");
       } else if (res?.status == 201) {
         Toasty("error", `Invalid Email or Password`);
         dispatch({
@@ -167,7 +167,7 @@ export const userResetPasswordAction =
           showConfirmButton: false,
           timer: 1500
         });
-        document.location.href = "/Home";
+        document.location.href = "/Packages";
       }
     } catch (error) {
       console.log("reseterror", error?.response?.data?.message);
@@ -195,7 +195,7 @@ export const updateUserInfoAction = (body) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`
       }
     };
-    console.log('updateUserInfoActionbody',body);
+    console.log("updateUserInfoActionbody", body);
     const res = await axios.post(`${baseURL}/user/editProfile`, body, config);
 
     console.log("res", res);
@@ -214,7 +214,6 @@ export const updateUserInfoAction = (body) => async (dispatch, getState) => {
         timer: 1500
       });
     }
-    
   } catch (error) {
     console.log("error", error);
     dispatch({
@@ -223,6 +222,52 @@ export const updateUserInfoAction = (body) => async (dispatch, getState) => {
     });
   }
 };
+
+export const userPaymentAction =
+  (id, userid, subscription, history) => async (dispatch, getState) => {
+    try {
+      const {
+        userLogin: { userInfo }
+      } = getState();
+      console.log("userLoginAction");
+
+      const res = await axios.post(
+        `${baseURL}/user/paymentOfSubscription`,
+        {
+          id: id,
+          userid: userid,
+          subscription: subscription
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`
+          }
+        }
+      );
+      if (res?.status == 201) {
+        dispatch({
+          type: USER_LOGIN_SUCCESS,
+          payload: res?.data
+        });
+        localStorage.setItem("userInfo", JSON.stringify(res?.data));
+
+        history?.push("/Dashboard");
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Payment done successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+      console.log("res", res);
+    } catch (error) {
+      dispatch({
+        type: USER_LOGIN_FAIL,
+        payload: error
+      });
+    }
+  };
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userInfo");

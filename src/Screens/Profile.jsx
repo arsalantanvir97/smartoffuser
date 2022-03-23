@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import ImageSelector from "../components/ImageSelector";
 import { updateUserInfoAction } from "../actions/userActions";
 import Toasty from "../utils/toast";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
-const Profile = () => {
+const Profile = (props) => {
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
   const [image, setimage] = useState("");
@@ -17,7 +18,12 @@ const Profile = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+ useEffect(() => {
+    if (userInfo) {
+      userInfo?.subscription==null && SubscriptionAuthorization(props?.history) ;
+    } 
+    
+  }, []);
   useEffect(() => {
     if (userInfo) {
       setfirstName(userInfo?.firstName);

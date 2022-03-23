@@ -3,12 +3,15 @@ import axios from "axios";
 import { baseURL, imageURL } from "../utils/api";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
 import Swal from "sweetalert2";
 import { SunspotLoader } from "react-awesome-loaders";
+import { userPaymentAction } from "../actions/userActions";
 
 const PackageDetails = ({ match, history }) => {
+  const dispatch = useDispatch();
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [packagedetails, setpackagedetails] = useState();
@@ -58,31 +61,18 @@ const PackageDetails = ({ match, history }) => {
       response.headers.date,
       response.data.receipt_email
     );
-    const res = await axios.post(
-      `${baseURL}/user/paymentOfSubscription`,
-      {
-        id: match?.params?.id,
-        userid: userInfo?._id,
-        subscription: packagedetails
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      }
+    await dispatch(
+      userPaymentAction(
+        match?.params?.id,
+        userInfo?._id,
+        packagedetails,
+        history
+      )
     );
+    
     setloading(false);
 
-    if (res?.status == 201) {
-      history?.push("/Dashboard");
-      Swal.fire({
-        icon: "success",
-        title: "",
-        text: "Payment done successfully",
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
+   
   }
 
   return (

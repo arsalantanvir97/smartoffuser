@@ -4,11 +4,18 @@ import { useSelector } from "react-redux";
 import { baseURL } from "../utils/api";
 import VectorMapp from "../components/VectorMapp";
 import { Link } from "react-router-dom";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
-const LocatePrinter = () => {
+const LocatePrinter = ({history}) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [machines, setmachines] = useState([]);
+  useEffect(() => {
+    if (userInfo) {
+      userInfo?.subscription==null && SubscriptionAuthorization(history) ;
+    } 
+    
+  }, []);
   useEffect(() => {
     onSubmitHandler();
   }, []);

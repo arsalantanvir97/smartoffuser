@@ -1,16 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header2 from "../components/Header2";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { baseURL } from "../utils/api";
+import axios from "axios";
+import ServicesSlider from "../components/ServicesSlider";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
 const Home = ({ history }) => {
+  const [services, setservices] = useState([]);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   useEffect(() => {
     if (userInfo) {
-      history.replace("/Home");
+      userInfo?.subscription==null ? SubscriptionAuthorization(history) : history.replace("/Home");
+    } 
+    
+  }, []);
+
+  const getServices = async () => {
+    try {
+      const res = await axios.get(`${baseURL}/user/getServices`);
+      setservices(res?.data?.services);
+      console.log("servicesres", res);
+    } catch (err) {
+      console.log(err);
     }
-  }, [userInfo]);
+  };
+  useEffect(() => {
+    getServices();
+  }, []);
+
   return (
     <>
       <Header2 />
@@ -79,25 +99,27 @@ const Home = ({ history }) => {
         </section>
         <div className="card-slider">
           <div className="container-fluid">
-            <div className="row align-items-center">
-              <div className="col-lg-4 col-md-12 col-12 d-flex justify-content-lg-center align-items-lg-center">
+            <div className="row align-items-center ml-4">
+              <div className="col-lg-4 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
                 <div className="card-slider-txt">
                   <h5
-                    className="wow animate__animated animate__fadeInDown"
-                    data-wow-duration="1.3s"
-                    data-wow-delay="0.3s"
+                    // className="wow animate__animated animate__fadeInDown"
+                    // data-wow-duration="1.3s"
+                    // data-wow-delay="0.3s"
                   >
                     AVAILABLE <br /> SERVICES
                   </h5>
-                  <span
+                  {services?.length>0 &&
+                  <ServicesSlider services={services} />}
+                  {/* <span
                     className="wow animate__animated animate__fadeInDown"
                     data-wow-duration="1.3s"
                     data-wow-delay="0.7s"
                   >
                     Lorem Ipsum is simply dummy text of <br /> the printing and
                     typesetting industry. <br /> Lorem Ipsum
-                  </span>
-                  <div
+                  </span> */}
+                  {/* <div
                     id="test"
                     className="wow animate__animated animate__fadeInUp"
                     data-wow-duration="1.3s"
@@ -109,18 +131,18 @@ const Home = ({ history }) => {
                     <div className="mmnext btn-next ml-2">
                       <i className="fas fa-caret-right" />
                     </div>
-                  </div>
-                  <Link
+                  </div> */}
+                  {/* <Link
                     to='#'
                     className="all-services wow animate__animated animate__fadeInUp mb-3"
                     data-wow-duration="1.3s"
                     data-wow-delay="0.7s"
                   >
                     VIEW ALL SERVICES
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
-              <div className="col-lg-8 col-md-12 col-12">
+              {/* <div className="col-lg-8 col-md-12 col-12">
                 <div className="services owl-carousel owl-theme">
                   <div
                     className="item wow animate__animated animate__zoomIn"
@@ -187,7 +209,7 @@ const Home = ({ history }) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

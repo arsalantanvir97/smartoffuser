@@ -6,6 +6,8 @@ import Toasty from "../utils/toast";
 
 import { userSignUpAction } from "../actions/userActions";
 import { validateEmail } from "../utils/ValidateEMail";
+import { baseURL } from "../utils/api";
+import axios from "axios";
 
 const SignUp2 = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -23,6 +25,8 @@ const SignUp2 = ({ history }) => {
   const [showicon, setshowicon] = useState(true);
   const [showicon2, setshowicon2] = useState(true);
   const [loading, setloading] = useState(false);
+  const [privacypolicy, setprivacypolicy] = useState("");
+  const [termscondition, settermscondition] = useState("");
 
   const dispatch = useDispatch();
 
@@ -48,6 +52,19 @@ const SignUp2 = ({ history }) => {
 
       Toasty("error", `Please enter a valid email`);
     }
+  };
+  useEffect(() => {
+    onSubmitHandler();
+  }, []);
+  const onSubmitHandler = async () => {
+    try {
+      const res = await axios.get(`${baseURL}/user/privacyPolicy`);
+      console.log("resres", res);
+      setprivacypolicy(res?.data?.privacypolicy?.details);
+      const ress = await axios.get(`${baseURL}/user/termsConditions`);
+
+      settermscondition(ress?.data?.termscondition?.details);
+    } catch (error) {}
   };
   return (
     <>
@@ -188,6 +205,16 @@ const SignUp2 = ({ history }) => {
               />
             </div>
           </div>
+           <div className="row">
+          <div className="col-lg-6">
+          <h4 className=" text-left">Privacy Policy</h4>
+          <p className=" for-head-p text-left mt-3">{privacypolicy}</p>
+        </div>
+        <div className="col-lg-6">
+          <h4 className=" text-left">Terms and Condition</h4>
+          <p className=" for-head-p text-left mt-3">{termscondition}</p>
+        </div>
+         </div>
         </div>
       </section>
     </>

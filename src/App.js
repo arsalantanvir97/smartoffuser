@@ -31,7 +31,11 @@ const App = () => {
       <Route path="/SignUp" component={SignUp} exact />
       <Route path="/SignUp2" component={SignUp2} exact />
       <Route path="/forgotpassword" component={ForgotPassword} exact />
-      <Route path="/verificationcode:email" component={VerificationCOde} exact />
+      <Route
+        path="/verificationcode:email"
+        component={VerificationCOde}
+        exact
+      />
       <Route path="/resetPassword" component={ResetPassword} exact />
 
       <PrivateRoute exact path="/Home" component={Home2} />
@@ -46,24 +50,21 @@ const App = () => {
         path="/PackageDetails:id"
         component={PackageDetails}
       />
-
       <PrivateRoute
         exact
         path="/MyDocumentView:id"
         component={MyDocumentView}
       />
-
       <PrivateRoute exact path="/ContactUs" component={ContactUs} />
       <PrivateRoute exact path="/PrintingLogs" component={PrintingLogs} />
       <PrivateRoute exact path="/Notification" component={Notification} />
-
       <PrivateRoute
         exact
         path="/PrintingLogsView:id"
         component={PrintingLogsView}
       />
       <PrivateRoute exact path="/MyDocument" component={MyDocument} />
-      <Footer/>
+      <Footer />
     </Router>
   );
 };
