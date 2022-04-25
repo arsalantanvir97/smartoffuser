@@ -2,20 +2,27 @@ import React, { useEffect, useState } from "react";
 import Header2 from "../components/Header2";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { baseURL } from "../utils/api";
+import { baseURL, imageURL } from "../utils/api";
 import axios from "axios";
 import ServicesSlider from "../components/ServicesSlider";
 import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
 const Home = ({ history }) => {
   const [services, setservices] = useState([]);
+  const [howitworks, sethowitworks] = useState();
+  const [question, setquestion] = useState("");
+  const [videouri, setvideouri] = useState("");
+
+  const [becomevendor, setbecomevendor] = useState();
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   useEffect(() => {
     if (userInfo) {
-      userInfo?.subscription==null ? SubscriptionAuthorization(history) : history.replace("/Home");
-    } 
-    
+      userInfo?.subscription == null
+        ? SubscriptionAuthorization(history)
+        : history.replace("/Home");
+    }
   }, []);
 
   const getServices = async () => {
@@ -27,8 +34,22 @@ const Home = ({ history }) => {
       console.log(err);
     }
   };
+  const getPolicyTerms = async () => {
+    try {
+      const res = await axios.get(`${baseURL}/policyterms/getpolicyterms`);
+      console.log("getPolicyTermsres", res);
+      sethowitworks(res?.data?.howitworkss);
+      setquestion(res?.data?.question);
+      setbecomevendor(res?.data?.becomevendor);
+      setvideouri(res?.data?.videosection?.videouri);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     getServices();
+    getPolicyTerms();
   }, []);
 
   return (
@@ -36,13 +57,10 @@ const Home = ({ history }) => {
       <Header2 />
       <div>
         <section className="slider-box">
-          <a data-fancybox href="https://www.youtube.com/watch?v=_sI_Ps7JSEk">
-            <img
-              src="assets/images/video-pic.png"
-              className="img-fluid w-100"
-              alt=""
-            />
-          </a>
+        <video width="750" height="500" controls >
+      <source src="https://www.youtube.com/watch?v=UT5F9AXjwhg" type="video/mp4"/>
+</video>
+         
         </section>
         <section className="it-work mt-4">
           <div className="container">
@@ -51,10 +69,7 @@ const Home = ({ history }) => {
                 <h4 className="for-head-h4">
                   How It <span className="blue-head"> Works</span>
                 </h4>
-                <p className="for-head-p">
-                  Lorem Ipsum Is Simply Dummy Text Of The Printing And
-                  Typesetting Industry.
-                </p>
+                <p className="for-head-p">{howitworks?.howitworks}</p>
               </div>
             </div>
             <div className="row py-4">
@@ -63,10 +78,7 @@ const Home = ({ history }) => {
                   <div className="card-body text-center">
                     <img src="assets/images/sign-up.png" alt="" />
                     <h4 className="card-title">Sign Up</h4>
-                    <p className="card-text">
-                      Lorem Ipsum is simply dummy text of the printing &amp;
-                      typesetting industry.
-                    </p>
+                    <p className="card-text">{howitworks?.signup}</p>
                   </div>
                 </div>
               </div>
@@ -75,10 +87,7 @@ const Home = ({ history }) => {
                   <div className="card-body text-center">
                     <img src="assets/images/man.png" alt="" />
                     <h4 className="card-title">Create Profile</h4>
-                    <p className="card-text">
-                      Lorem Ipsum is simply dummy text of the printing &amp;
-                      typesetting industry.
-                    </p>
+                    <p className="card-text">{howitworks?.createprofile}</p>
                   </div>
                 </div>
               </div>
@@ -87,10 +96,7 @@ const Home = ({ history }) => {
                   <div className="card-body text-center">
                     <img src="assets/images/rocket.png" alt="" />
                     <h4 className="card-title">Launch</h4>
-                    <p className="card-text">
-                      Lorem Ipsum is simply dummy text of the printing &amp;
-                      typesetting industry.
-                    </p>
+                    <p className="card-text">{howitworks?.launch}</p>
                   </div>
                 </div>
               </div>
@@ -103,14 +109,15 @@ const Home = ({ history }) => {
               <div className="col-lg-4 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
                 <div className="card-slider-txt">
                   <h5
-                    // className="wow animate__animated animate__fadeInDown"
-                    // data-wow-duration="1.3s"
-                    // data-wow-delay="0.3s"
+                  // className="wow animate__animated animate__fadeInDown"
+                  // data-wow-duration="1.3s"
+                  // data-wow-delay="0.3s"
                   >
                     AVAILABLE <br /> SERVICES
                   </h5>
-                  {services?.length>0 &&
-                  <ServicesSlider services={services} />}
+                  {services?.length > 0 && (
+                    <ServicesSlider services={services} />
+                  )}
                   {/* <span
                     className="wow animate__animated animate__fadeInDown"
                     data-wow-duration="1.3s"
@@ -223,10 +230,7 @@ const Home = ({ history }) => {
                       Do You Have{" "}
                       <span className="blue-head"> Any Questions ?</span>
                     </h4>
-                    <p className="for-head-p">
-                      Lorem Ipsum Is Simply Dummy Text Of The Printing And
-                      Typesetting Industry.
-                    </p>
+                    <p className="for-head-p">{question?.question}</p>
                     <Link to="#" className="blue-btn my-4">
                       Contact Us
                     </Link>
@@ -297,7 +301,14 @@ const Home = ({ history }) => {
                       >
                         Become a <span className="blue-head"> Vendor?</span>
                       </h4>
-                      <img src="assets/images/red-line.png" alt="" />
+                      <img
+                        src={
+                          becomevendor?.image && becomevendor?.image !== null
+                            ? `${imageURL}${userInfo?.userImage}`
+                            : "assets/images/red-line.png"
+                        }
+                        alt=""
+                      />
                     </div>
                     <p
                       className="wow animate__ animate__fadeInUp animated"
@@ -310,20 +321,7 @@ const Home = ({ history }) => {
                         animationName: "fadeInUp"
                       }}
                     >
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the when an unknown printer
-                      took a galley of type and scrambled it to make a type
-                      specimen book. <br /> <br />
-                      It has survived not only five centuries, but also the leap
-                      into electronic typesetting, remaining essentially
-                      unchanged.
-                      <br /> <br />
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the when an unknown printer
-                      took a galley of type and scrambled it to make a type
-                      specimen book.
+                      {becomevendor?.text}
                     </p>
                     <Link
                       to="#"

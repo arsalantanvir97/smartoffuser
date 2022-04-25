@@ -1,7 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { baseURL } from "../utils/api";
 
 const Footer = () => {
+  let history = useHistory();
+
+  const [socialmedialinks, setsocialmedialinks] = useState();
+  useEffect(() => {
+    getPolicyTerms();
+  }, []);
+  const getPolicyTerms = async () => {
+    try {
+      const res = await axios.get(`${baseURL}/policyterms/getpolicyterms`);
+      console.log("getPolicyTermsres", res);
+
+      setsocialmedialinks(res?.data?.socialmedia);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <section className="for-footer">
       <div className="container">
@@ -17,13 +35,28 @@ const Footer = () => {
                 animationDelay: "1.3s"
               }}
             >
-              <Link to="#">
+              <Link
+                onClick={() => {
+                  window.open(socialmedialinks?.facebook, "_blank");
+                }}
+                to="#"
+              >
                 <i className="fab fa-facebook-f mr-2" />
               </Link>
-              <Link to="#">
+              <Link
+                onClick={() => {
+                  window.open(socialmedialinks?.twitter, "_blank");
+                }}
+                to="#"
+              >
                 <i className="fab fa-twitter mr-2" />
               </Link>
-              <Link to="#">
+              <Link
+                onClick={() => {
+                  window.open(socialmedialinks?.instagram, "_blank");
+                }}
+                to="#"
+              >
                 <i className="fab fa-instagram" />
               </Link>
             </div>

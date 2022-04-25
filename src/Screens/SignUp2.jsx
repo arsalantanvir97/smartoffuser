@@ -54,9 +54,9 @@ const SignUp2 = ({ history }) => {
     }
   };
   useEffect(() => {
-    onSubmitHandler();
+    getContentHandler();
   }, []);
-  const onSubmitHandler = async () => {
+  const getContentHandler = async () => {
     try {
       const res = await axios.get(`${baseURL}/user/privacyPolicy`);
       console.log("resres", res);
