@@ -55,7 +55,7 @@ const Notification = () => {
             <h4 className="for-head-h4">Notifications</h4>
           </div>
         </div>
-        {notifcation?.docs?.length > 0 &&
+        {notifcation?.docs?.length > 0 ? (
           notifcation?.docs?.map((not, index) => (
             <div className="card wap px-5">
               <div className="row">
@@ -76,7 +76,10 @@ const Notification = () => {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <h5 style={{ marginTop: 20 }}>No Notification</h5>
+        )}
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { imageURL } from "../utils/api";
 // import { imageURL } from "../utils/api";
 // import UnauthorizedAlert from "./UnauthorizedAlert";
 
@@ -19,13 +20,30 @@ export default class ServicesSlider extends Component {
     return (
       <Slider {...settings}>
         {this?.props?.services?.map((pro) => (
-          <span
-            // className="wow animate__animated animate__fadeInDown"
-            // data-wow-duration="1.3s"
-            // data-wow-delay="0.7s"
-          >
-            {pro?.details}
-          </span>
+          <>
+            <p
+              style={{ marginBottom: 10 }}
+              // className={
+              //   subs?.status == "Active"
+              //     ? "black-20 txt-green2"
+              //     : "black-20 txt-red2"
+              // }
+            >
+              {pro?.details}
+            </p>
+
+            <span className="">
+              <img
+                style={{ width: "100%", height: "100%" }}
+                src={
+                  pro?.image && pro?.image !== null
+                    ? `${imageURL}${pro?.image}`
+                    : "images/user-image.png"
+                }
+                alt="avatar"
+              />
+            </span>
+          </>
         ))}
       </Slider>
     );

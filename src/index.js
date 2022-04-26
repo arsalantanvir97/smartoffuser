@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { ToastContainer } from "react-toastify";
 
+
 ReactDOM.render(
   <Provider store={store}>
     <HttpsRedirect>

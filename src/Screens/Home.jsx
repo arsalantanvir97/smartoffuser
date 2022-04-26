@@ -6,12 +6,23 @@ import { baseURL, imageURL } from "../utils/api";
 import axios from "axios";
 import ServicesSlider from "../components/ServicesSlider";
 import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
+import MoonLoader from "react-spinners/MoonLoader";
+import { css } from "@emotion/react";
 
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: #000;
+  z-index:1111111
+`;
 const Home = ({ history }) => {
   const [services, setservices] = useState([]);
   const [howitworks, sethowitworks] = useState();
   const [question, setquestion] = useState("");
   const [videouri, setvideouri] = useState("");
+  const [youtubeid, setyoutubeid] = useState("");
+  let [color, setColor] = useState("#000");
+  let [loading, setLoading] = useState(true);
 
   const [becomevendor, setbecomevendor] = useState();
 
@@ -42,6 +53,8 @@ const Home = ({ history }) => {
       setquestion(res?.data?.question);
       setbecomevendor(res?.data?.becomevendor);
       setvideouri(res?.data?.videosection?.videouri);
+      setyoutubeid(res?.data?.videosection?.videouri?.split("v=")[1]);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -57,10 +70,36 @@ const Home = ({ history }) => {
       <Header2 />
       <div>
         <section className="slider-box">
-        <video width="750" height="500" controls >
-      <source src="https://www.youtube.com/watch?v=UT5F9AXjwhg" type="video/mp4"/>
-</video>
-         
+          <div style={{ width: "100%" }}>
+            {youtubeid ? (
+              <iframe
+                width="100%"
+                // allow="accelerometer; autoplay *; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                height="700"
+                src={
+                  youtubeid &&
+                  `https://youtube.com/embed/${youtubeid}?autoplay=1`
+                }
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+            ) : (
+              <>
+                {" "}
+                <div
+                  style={{
+                    height: 700,
+                    width: "100%",
+                    zIndex:-3333,
+                    backgroundColor: "black"
+                  }}
+                >
+                  <MoonLoader
+            color={color} loading={loading} css={override} size={30} />
+                </div>
+              </>
+            )}
+          </div>
         </section>
         <section className="it-work mt-4">
           <div className="container">
@@ -106,7 +145,7 @@ const Home = ({ history }) => {
         <div className="card-slider">
           <div className="container-fluid">
             <div className="row align-items-center ml-4">
-              <div className="col-lg-4 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
+              <div className="col-lg-8 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
                 <div className="card-slider-txt">
                   <h5
                   // className="wow animate__animated animate__fadeInDown"

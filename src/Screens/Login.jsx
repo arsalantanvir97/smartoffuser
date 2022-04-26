@@ -109,29 +109,29 @@ const Login = ({ history }) => {
                     </Link>
                   </label>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-primary blue-btn2 d-flex m-auto"
-                  onClick={() =>
-                    email?.length > 0 && password?.length > 0
-                      ? submitHandler()
-                      : Toasty(
-                          "error",
-                          `Please fill out all the required fields`
-                        )
-                  }
-                >
-                  Login
-                </button>
+                {!loading ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary blue-btn2 d-flex m-auto"
+                    onClick={() =>
+                      email?.length > 0 && password?.length > 0
+                        ? submitHandler()
+                        : Toasty(
+                            "error",
+                            `Please fill out all the required fields`
+                          )
+                    }
+                  >
+                    Login
+                  </button>
+                ) : (
+                  <i className="fas fa-spinner fa-pulse"></i>
+                )}
                 <div className="text-center mt-4">
-                  {!loading ? (
-                    <Link to="/SignUp" className="login-ristr">
-                      New Here?{" "}
-                      <span className="blue-head"> Register Your Account</span>
-                    </Link>
-                  ) : (
-                    <i className="fas fa-spinner fa-pulse"></i>
-                  )}
+                  <Link to="/SignUp" className="login-ristr">
+                    New Here?{" "}
+                    <span className="blue-head"> Register Your Account</span>
+                  </Link>
                 </div>
               </form>
             </div>

@@ -20,9 +20,11 @@ const MyDocumentView = ({ match, history }) => {
 
   const [folderDetails, setfolderDetails] = useState([]);
   const [doc_file, setdoc_file] = useState("");
+  const [filename, setfilename] = useState("");
+
   const [machines, setmachines] = useState([]);
   const [printData, setprintData] = useState();
-  const [pages, setpages] = useState(0);
+  const [pages, setpages] = useState();
   const [type, settype] = useState();
   const [settings, setsettings] = useState();
   const [printcost, setprintcost] = useState(0);
@@ -92,6 +94,7 @@ const MyDocumentView = ({ match, history }) => {
     const formData = new FormData();
     formData.append("doc_schedule", doc_file);
     formData.append("folderid", match?.params?.id);
+    formData.append("filename", filename);
 
     const body = formData;
     try {
@@ -104,13 +107,14 @@ const MyDocumentView = ({ match, history }) => {
       console.log("createFile");
 
       const res = await axios.post(
-        `${baseURL}/folder/uploadFilesinFolder`,
+        `${baseURL}/folder/uploadFilesinaFolder`,
         body,
         config
       );
 
       console.log("res", res);
       if (res?.status == 201) {
+        closeModals();
         Swal.fire({
           icon: "success",
           title: "",
@@ -131,6 +135,7 @@ const MyDocumentView = ({ match, history }) => {
       });
     }
     setdoc_file("");
+    setfilename("");
   };
 
   const deleteFileHandler = async (index) => {
@@ -168,7 +173,7 @@ const MyDocumentView = ({ match, history }) => {
     console.log("searchString", searchString);
     try {
       const res = await axios({
-        url: `${baseURL}/folder/searchFilesinFolder`,
+        url: `${baseURL}/folder/searchFilesinaFolder`,
         method: "POST",
         data: { searchString, folderid: match?.params?.id },
         headers: {
@@ -238,6 +243,8 @@ const MyDocumentView = ({ match, history }) => {
         documentname: selectedFile,
         pages: pages,
         type,
+        card_holder_name: response?.data?.billing_details?.name,
+        card_number: response?.data?.payment_method_details?.last4,
         userid: userInfo?._id,
         userName: userInfo?.firstName,
         requestformachine: printinfo?._id,
@@ -345,26 +352,24 @@ const MyDocumentView = ({ match, history }) => {
                 </div>
               </div>
               <div className="row">
-                {folderDetails?.fileArr?.length > 0 &&
+                {folderDetails?.fileArr?.length > 0 ? (
                   folderDetails?.fileArr?.map((filee, index) => (
                     <div className="col-lg-3">
                       <div className="card work-card">
                         <div className="card-body text-center">
                           <img
                             src={
-                              filee?.includes("docx")
+                              filee?.filetype?.includes("docx")
                                 ? "assets/images/word-pic.png"
-                                : filee?.includes("pdf")
+                                : filee?.filetype?.includes("pdf")
                                 ? "assets/images/icon-pdf.png"
                                 : null
                             }
                             alt=""
                           />
 
-                          <h4 className="card-title">
-                            {folderDetails?.folderName}
-                          </h4>
-                          <h6 className="card-title">{filee}</h6>
+                          <h4 className="card-title">{filee?.filename}</h4>
+                          {/* <h6 className="card-title">{filee}</h6> */}
                         </div>
                         <div className="btn-group2 mr-1 mb-1">
                           <button
@@ -392,7 +397,10 @@ const MyDocumentView = ({ match, history }) => {
                               to="#"
                               className="dropdown-item"
                               onClick={() => {
-                                window.open(`${imageURL}${filee}`, "_blank");
+                                window.open(
+                                  `${imageURL}${filee?.file}`,
+                                  "_blank"
+                                );
                               }}
                             >
                               View
@@ -417,7 +425,7 @@ const MyDocumentView = ({ match, history }) => {
                               data-toggle="modal"
                               data-target="#exampleModal"
                               onClick={() => {
-                                setselectedFile(filee);
+                                setselectedFile(filee?.file);
                               }}
                             >
                               Print
@@ -427,7 +435,10 @@ const MyDocumentView = ({ match, history }) => {
                       </div>
                       {/* <p className="text-center">{}</p> */}
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <h5>No File</h5>
+                )}
               </div>
               {/* <div className="row py-4 text-center">
             <div className="col-lg-12">
@@ -464,6 +475,22 @@ const MyDocumentView = ({ match, history }) => {
                     <div className="card work-card-4 h-12">
                       <div className="card-body">
                         <div className="form-group">
+                          <label htmlFor="exampleInputEmail1">
+                            Enter File Name *
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="exampleInputEmail1"
+                            aria-describedby="emailHelp"
+                            placeholder="Enter File Name"
+                            value={filename}
+                            onChange={(e) => {
+                              setfilename(e.target.value);
+                            }}
+                          />
+                        </div>
+                        <div className="form-group">
                           <label htmlFor>
                             Upload File <span className="fc-red">*</span>
                           </label>
@@ -480,9 +507,6 @@ const MyDocumentView = ({ match, history }) => {
                         <button
                           type="button"
                           className="btn btn-primary blue-btn2 d-flex m-auto"
-                          data-dismiss="modal"
-                          data-toggle="modal"
-                          data-target="#confrm"
                           onClick={() =>
                             doc_file.name?.length > 0
                               ? submitFileHandler()
@@ -554,7 +578,7 @@ const MyDocumentView = ({ match, history }) => {
                           <InputNumber
                             min={0}
                             value={pages}
-                            onChange={setprintData}
+                            onChange={setpages}
                             max={9}
                             className="form-control "
                           />
@@ -581,9 +605,15 @@ const MyDocumentView = ({ match, history }) => {
                             </option>
                           </select>
                         </div>
-                        {pages?.length > 0 && type?.length > 0 ? (
+                        {pages && type?.length > 0 ? (
                           <>
-                            <div style={{ width: "100%", textAlign: "center" }}>
+                            <div
+                              style={{
+                                width: "100%",
+                                textAlign: "center",
+                                marginTop: 15
+                              }}
+                            >
                               <StripeCheckout
                                 stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
                                 token={handleToken}

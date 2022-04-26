@@ -20,13 +20,15 @@ const MyDocument = ({ history }) => {
 
   const [folderName, setfolderName] = useState("");
   const [doc_schedule, setdoc_schedule] = useState("");
+  const [filename, setfilename] = useState("");
+
   const [doc_file, setdoc_file] = useState("");
   const [render, setrender] = useState(false);
   const [userdata, setuserdata] = useState([]);
   const [userdetails, setuserdetails] = useState();
   const [machines, setmachines] = useState([]);
   const [printData, setprintData] = useState();
-  const [pages, setpages] = useState(0);
+  const [pages, setpages] = useState();
   const [type, settype] = useState();
   const [settings, setsettings] = useState();
   const [printcost, setprintcost] = useState(0);
@@ -150,6 +152,7 @@ const MyDocument = ({ history }) => {
     formData.append("doc_schedule", doc_schedule);
     formData.append("folderName", folderName);
     formData.append("userid", userInfo?._id);
+    formData.append("filename", filename);
 
     const body = formData;
     try {
@@ -162,7 +165,7 @@ const MyDocument = ({ history }) => {
       console.log("createfolder");
 
       const res = await axios.post(
-        `${baseURL}/folder/createFolder`,
+        `${baseURL}/folder/createaFolder`,
         body,
         config
       );
@@ -176,6 +179,7 @@ const MyDocument = ({ history }) => {
           showConfirmButton: false,
           timer: 1500
         });
+        closeModals();
       }
     } catch (error) {
       console.log("error", error);
@@ -189,6 +193,7 @@ const MyDocument = ({ history }) => {
     }
     setdoc_schedule("");
     setfolderName("");
+    setfilename("");
     setrender(!render);
   };
 
@@ -196,6 +201,7 @@ const MyDocument = ({ history }) => {
     const formData = new FormData();
     formData.append("doc_schedule", doc_file);
     formData.append("userid", userInfo?._id);
+    formData.append("filename", filename);
 
     const body = formData;
     try {
@@ -222,6 +228,7 @@ const MyDocument = ({ history }) => {
           showConfirmButton: false,
           timer: 1500
         });
+        closeModals();
       }
     } catch (error) {
       console.log("error", error);
@@ -234,6 +241,8 @@ const MyDocument = ({ history }) => {
       });
     }
     setdoc_file("");
+    setfilename("");
+    setdoc_file('')
     setrender(!render);
   };
   const deleteFolderHandler = async (id) => {
@@ -303,7 +312,7 @@ const MyDocument = ({ history }) => {
     console.log("searchString", searchString);
     try {
       const res = await axios({
-        url: `${baseURL}/folder/searchbyFileName`,
+        url: `${baseURL}/folder/searchbyaFileName`,
         method: "POST",
         data: { searchString, userid: userInfo?._id },
         headers: {
@@ -373,6 +382,9 @@ const MyDocument = ({ history }) => {
         documentname: selectedFile,
         pages: pages,
         type,
+        card_holder_name:response?.data?.billing_details?.name,
+        card_number:response?.data?.payment_method_details?.last4,
+        
         userid: userInfo?._id,
         userName: userInfo?.firstName,
         requestformachine: printinfo?._id,
@@ -439,7 +451,7 @@ const MyDocument = ({ history }) => {
                     </div>
                     <div className="col-9">
                       <form className action="login-home-page.php">
-                        <div className="form-group">
+                        {/* <div className="form-group">
                           <select
                             className="form-control smrt-of-inpt"
                             id="exampleFormControlSelect1"
@@ -447,7 +459,7 @@ const MyDocument = ({ history }) => {
                             <option>select</option>
                             <option>2</option>
                           </select>
-                        </div>
+                        </div> */}
                       </form>
                     </div>
                   </div>
@@ -518,8 +530,8 @@ const MyDocument = ({ history }) => {
                           <h4 className="card-title">
                             {data?.folderName
                               ? data?.folderName
-                              : data?.docfile
-                              ? data?.docfile
+                              : data?.filename
+                              ? data?.filename
                               : null}{" "}
                             {data?.folderName ? "Folder" : null}
                           </h4>
@@ -631,16 +643,34 @@ const MyDocument = ({ history }) => {
                   </h4>
                   <form className="loginform pt-0" action>
                     <div className="form-group">
-                      <label htmlFor="exampleInputEmail1">Enter Name *</label>
+                      <label htmlFor="exampleInputEmail1">
+                        Enter Folder Name *
+                      </label>
                       <input
                         type="text"
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
-                        placeholder="Enter Name"
+                        placeholder="Enter Folder Name"
                         value={folderName}
                         onChange={(e) => {
                           setfolderName(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="exampleInputEmail1">
+                        Enter File Name *
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        placeholder="Enter File Name"
+                        value={filename}
+                        onChange={(e) => {
+                          setfilename(e.target.value);
                         }}
                       />
                     </div>
@@ -678,7 +708,7 @@ const MyDocument = ({ history }) => {
                     <button
                       type="button"
                       onClick={() =>
-                        folderName?.length > 0 && doc_schedule?.name?.length > 0
+                        folderName?.length > 0
                           ? submitHandler()
                           : Toasty(
                               "error",
@@ -686,7 +716,6 @@ const MyDocument = ({ history }) => {
                             )
                       }
                       className="btn btn-primary blue-btn2 d-flex m-auto"
-                      data-dismiss="modal"
                       aria-label="Close"
                     >
                       Create
@@ -723,6 +752,22 @@ const MyDocument = ({ history }) => {
                     <div className="card work-card-4 h-12">
                       <div className="card-body">
                         <div className="form-group">
+                          <label htmlFor="exampleInputEmail1">
+                            Enter File Name *
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="exampleInputEmail1"
+                            aria-describedby="emailHelp"
+                            placeholder="Enter File Name"
+                            value={filename}
+                            onChange={(e) => {
+                              setfilename(e.target.value);
+                            }}
+                          />
+                        </div>
+                        <div className="form-group">
                           <label htmlFor>
                             Upload File <span className="fc-red">*</span>
                           </label>
@@ -740,9 +785,9 @@ const MyDocument = ({ history }) => {
                         <button
                           type="button"
                           className="btn btn-primary blue-btn2 d-flex m-auto"
-                          data-dismiss="modal"
-                          data-toggle="modal"
-                          data-target="#confrm"
+                          // data-dismiss="modal"
+                          // data-toggle="modal"
+                          // data-target="#confrm"
                           onClick={() =>
                             doc_file.name?.length > 0
                               ? submitFileHandler()
@@ -844,9 +889,9 @@ const MyDocument = ({ history }) => {
                             </option>
                           </select>
                         </div>
-                        {pages?.length > 0 && type?.length > 0 ? (
+                        {pages && type?.length > 0 ? (
                           <>
-                            <div style={{ width: "100%", textAlign: "center" }}>
+                            <div style={{ width: "100%", textAlign: "center" ,marginTop:15}}>
                               <StripeCheckout
                                 stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
                                 token={handleToken}
