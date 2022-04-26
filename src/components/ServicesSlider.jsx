@@ -11,7 +11,7 @@ export default class ServicesSlider extends Component {
   render() {
     console.log("this.props", this.props);
     const settings = {
-      dots: false,
+      dots: true,
       infinite: false,
       speed: 500,
       slidesToShow: 1,
@@ -34,7 +34,7 @@ export default class ServicesSlider extends Component {
 
             <span className="">
               <img
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "65%", height: "70%" }}
                 src={
                   pro?.image && pro?.image !== null
                     ? `${imageURL}${pro?.image}`

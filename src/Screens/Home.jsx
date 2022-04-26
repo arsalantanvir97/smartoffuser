@@ -157,6 +157,8 @@ const Home = ({ history }) => {
                   {services?.length > 0 && (
                     <ServicesSlider services={services} />
                   )}
+                              <div style={{height:30}}></div>
+
                   {/* <span
                     className="wow animate__animated animate__fadeInDown"
                     data-wow-duration="1.3s"
