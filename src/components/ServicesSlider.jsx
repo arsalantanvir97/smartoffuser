@@ -34,7 +34,7 @@ export default class ServicesSlider extends Component {
 
             <span className="">
               <img
-                style={{ width: "65%", height: "70%" }}
+                style={{ maxWidth: "95%", maxHeight: "70%" ,borderRadius:15}}
                 src={
                   pro?.image && pro?.image !== null
                     ? `${imageURL}${pro?.image}`

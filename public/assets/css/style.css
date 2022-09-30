@@ -154,7 +154,9 @@ body {
     background-size: cover;
     /* padding-top: 50px; */
 }
-
+.abcccccc:hover{
+    cursor: pointer;
+}
 input {
     font-weight: 400;
     position: relative;
@@ -2068,7 +2070,7 @@ ol.carousel-indicators.carousel-indicators-numbers li:last-child {
     background-repeat: no-repeat;
     margin: 1rem 0;
     position: relative;
-    background-size: 70% 100%;
+    background-size: 90% 100%;
 }
 
 .card-slider .card {

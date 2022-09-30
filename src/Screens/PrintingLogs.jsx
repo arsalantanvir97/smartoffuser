@@ -8,8 +8,9 @@ import DatePicker from "react-datepicker";
 import moment from "moment";
 import Pagination from "../components/Padgination";
 import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
+import Loader from "react-spinners/BarLoader";
 
-const PrintingLogs = ({history}) => {
+const PrintingLogs = ({ history }) => {
   const [page, setPage] = useState(1);
 
   const [perPage, setPerPage] = useState(10);
@@ -20,20 +21,21 @@ const PrintingLogs = ({history}) => {
   const [prints, setprints] = useState([]);
   const [rerender, setrerender] = useState(true);
   const [paid, setpaid] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
- useEffect(() => {
+  useEffect(() => {
     if (userInfo) {
-      userInfo?.subscription==null && SubscriptionAuthorization(history) ;
-    } 
-    
+      userInfo?.subscription == null && SubscriptionAuthorization(history);
+    }
   }, []);
   useEffect(() => {
     getPrintsLogs();
   }, [page, perPage, from, to, status, searchString, rerender]);
 
   const getPrintsLogs = async () => {
+    setloading(true);
     try {
       const res = await axios({
         url: `${baseURL}/print/Printlogs/${userInfo?._id}`,
@@ -52,12 +54,14 @@ const PrintingLogs = ({history}) => {
           Authorization: `Bearer ${userInfo.token}`
         }
       });
+      setloading(false);
 
       console.log("res", res);
       setprints(res.data?.print);
     } catch (err) {
       console.log("err", err);
     }
+    setloading(false);
   };
   return (
     <section className="board">
@@ -116,48 +120,57 @@ const PrintingLogs = ({history}) => {
           </div>
         </div>
         <div className="table-responsive">
-          <table className="table" style={{backgroundColor:'white'}}>
-            <thead>
-              <tr>
-                <th>S.no</th>
-                <th>Print ID</th>
-                <th>Printer ID</th>
-                <th>Document Name</th>
-                <th>No of Pages</th>
-                <th>Cost Per Page</th>
-                <th>Print Location</th>
-                <th>Print Date</th>
-                <th>Type</th>
-                <th>Total Amount</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {prints?.docs?.length > 0 &&
-                prints?.docs?.map((print, index) => (
-                  <tr>
-                    <td>{index + 1}</td>
-                    <td>{print?._id}</td>
-                    <td>{print?.requestformachine?._id}</td>
-                    <td>{print?.documentname}</td>
-                    <td>{print?.pages}</td>
-                    <td>${print?.costperpage}</td>
-                    <td> {print?.requestformachine?.branchid?.address}</td>
-                    <td> {moment.utc(print?.createdAt).format("LL")}</td>
-                    <td>{print?.type}</td>
-                    <td>${print?.totalcost}</td>
-                    <td>
-                      <i className="fa fa-ellipsis-v" aria-hidden="true" />
-                      <ul className="onhover">
-                        <li>
-                          <Link to={`PrintingLogsView${print?._id}`}>View</Link>
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          {loading ? (
+            <Loader />
+          ) : (
+            <table className="table" style={{ backgroundColor: "white" }}>
+              <thead>
+                <tr>
+                  <th>S.no</th>
+                  <th>Print ID</th>
+                  <th>Printer ID</th>
+                  <th>Document Name</th>
+                  <th>No of Pages</th>
+                  <th>Cost Per Page</th>
+                  <th>Print Location</th>
+                  <th>Print Date</th>
+                  <th>Type</th>
+                  <th>Total Amount</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {prints?.docs?.length > 0 ? (
+                  prints?.docs?.map((print, index) => (
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>{print?._id}</td>
+                      <td>{print?.requestformachine?._id}</td>
+                      <td>{print?.documentname}</td>
+                      <td>{print?.pages}</td>
+                      <td>${print?.costperpage}</td>
+                      <td> {print?.requestformachine?.branchid?.address}</td>
+                      <td> {moment.utc(print?.createdAt).format("LL")}</td>
+                      <td>{print?.type}</td>
+                      <td>${print?.totalcost}</td>
+                      <td>
+                        <i className="fa fa-ellipsis-v" aria-hidden="true" />
+                        <ul className="onhover">
+                          <li>
+                            <Link to={`PrintingLogsView${print?._id}`}>
+                              View
+                            </Link>
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <p>No Print</p>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
         {prints?.docs?.length > 0 && (
           <Pagination

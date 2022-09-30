@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { baseURL } from "../utils/api";
 import Toasty from "../utils/toast";
 import { validateEmail } from "../utils/ValidateEMail";
+import Header2 from "../components/Header2";
 
 const ContactUs = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -35,15 +36,11 @@ const ContactUs = ({ history }) => {
             email,
             type: "User"
           },
-          {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`
-            }
-          }
+       
         );
         setloading(false);
         if (res?.status == 201) {
-          history?.push("/Dashboard");
+          history?.push("/Home");
           Swal.fire({
             icon: "success",
             title: "",
@@ -68,6 +65,8 @@ const ContactUs = ({ history }) => {
     }
   };
   return (
+    <>
+    {!userInfo &&<Header2/>}
     <section className="board">
       <div className="container">
         <div className="row">
@@ -178,6 +177,7 @@ const ContactUs = ({ history }) => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

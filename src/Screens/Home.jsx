@@ -13,7 +13,7 @@ const override = css`
   display: block;
   margin: 0 auto;
   border-color: #000;
-  z-index:1111111
+  z-index: 1111111;
 `;
 const Home = ({ history }) => {
   const [services, setservices] = useState([]);
@@ -90,12 +90,16 @@ const Home = ({ history }) => {
                   style={{
                     height: 700,
                     width: "100%",
-                    zIndex:-3333,
+                    zIndex: -3333,
                     backgroundColor: "black"
                   }}
                 >
                   <MoonLoader
-            color={color} loading={loading} css={override} size={30} />
+                    color={color}
+                    loading={loading}
+                    css={override}
+                    size={30}
+                  />
                 </div>
               </>
             )}
@@ -111,8 +115,13 @@ const Home = ({ history }) => {
                 <p className="for-head-p">{howitworks?.howitworks}</p>
               </div>
             </div>
-            <div className="row py-4">
-              <div className="col-lg-4">
+            <div className="row py-4 abcccccc">
+              <div
+                onClick={() => {
+                  history?.push("/SignUp");
+                }}
+                className="col-lg-4"
+              >
                 <div className="card work-card">
                   <div className="card-body text-center">
                     <img src="assets/images/sign-up.png" alt="" />
@@ -121,11 +130,13 @@ const Home = ({ history }) => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4">
+              <div   onClick={() => {
+                  history?.push("/Login");
+                }} className="col-lg-4">
                 <div className="card work-card">
                   <div className="card-body text-center">
                     <img src="assets/images/man.png" alt="" />
-                    <h4 className="card-title">Create Profile</h4>
+                    <h4 className="card-title">Sign In</h4>
                     <p className="card-text">{howitworks?.createprofile}</p>
                   </div>
                 </div>
@@ -133,8 +144,8 @@ const Home = ({ history }) => {
               <div className="col-lg-4">
                 <div className="card work-card">
                   <div className="card-body text-center">
-                    <img src="assets/images/rocket.png" alt="" />
-                    <h4 className="card-title">Launch</h4>
+                    <img src="assets/images/android ios.png" style={{maxWidth:64,maxHeight:95,minWidth:64,minHeight:95}} alt="" />
+                    <h4 style={{fontSize:20}} className="card-title">Available on Android and IOS</h4>
                     <p className="card-text">{howitworks?.launch}</p>
                   </div>
                 </div>
@@ -142,12 +153,13 @@ const Home = ({ history }) => {
             </div>
           </div>
         </section>
-        <div className="card-slider">
+        <div className="card-slider" style={{maxWidth:700,maxHeight:500}}>
           <div className="container-fluid">
             <div className="row align-items-center ml-4">
-              <div className="col-lg-8 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
+              <div className="col-lg-10 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
                 <div className="card-slider-txt">
-                  <h5
+                  <h5 style={{fontSize:40,marginTop:5}}
+                  
                   // className="wow animate__animated animate__fadeInDown"
                   // data-wow-duration="1.3s"
                   // data-wow-delay="0.3s"
@@ -157,7 +169,7 @@ const Home = ({ history }) => {
                   {services?.length > 0 && (
                     <ServicesSlider services={services} />
                   )}
-                              <div style={{height:30}}></div>
+                  <div style={{ height: 30 }}></div>
 
                   {/* <span
                     className="wow animate__animated animate__fadeInDown"
@@ -272,7 +284,7 @@ const Home = ({ history }) => {
                       <span className="blue-head"> Any Questions ?</span>
                     </h4>
                     <p className="for-head-p">{question?.question}</p>
-                    <Link to="#" className="blue-btn my-4">
+                    <Link to="/ContactUs" className="blue-btn my-4">
                       Contact Us
                     </Link>
                   </div>
