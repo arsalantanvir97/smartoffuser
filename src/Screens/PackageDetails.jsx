@@ -126,11 +126,59 @@ const PackageDetails = ({ match, history }) => {
                           className="mr-2"
                           alt="..."
                         />
-                        <div className="media-body">
-                          <h6 className="mt-0 text-left">
-                            {packagedetails?.duration} Days
-                          </h6>
-                        </div>
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Saved Documents for {packagedetails?.duration} days
+                        </h6>
+                      </div>
+                    </div>
+                    <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Allowed to print {packagedetails?.noofpagesprint} pages
+                        </h6>
+                      </div>
+                    </div> 
+                     <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Allowed to scan {packagedetails?.noofpagesscan} pages
+                        </h6>
+                      </div>
+                    </div> 
+                     <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Storage Memory Availabe {packagedetails?.storagememory} GB
+                        </h6>
+                      </div>
+                    </div>
+                      <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Access to internet {packagedetails?.internethours} hours
+                        </h6>
+                      </div>
                       </div>
                       {packagedetails?.Features?.length > 0 &&
                         packagedetails?.Features?.map((pack) => (

@@ -1569,7 +1569,7 @@ i.right-icon {
     margin: 10px 0;
     border: dotted;
     border-color: #DBD6D6;
-    height: 330px;
+    height: auto;
 }
 
 .work-card2 sup {

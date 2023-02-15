@@ -9,8 +9,8 @@ const Packages = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [packages, setpackages] = useState([]);
- 
- 
+
+
 
   useEffect(() => {
     onSubmitHandler();
@@ -30,7 +30,7 @@ const Packages = () => {
         console.log("res", res?.data);
         setpackages(res?.data?.getAllSubscriptions);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   return (
     <section className="board">
@@ -67,10 +67,59 @@ const Packages = () => {
                       />
                       <div className="media-body">
                         <h6 className="mt-0 text-left">
-                          {pack?.duration} Days
+                          Saved Documents for {pack?.duration} days
                         </h6>
                       </div>
                     </div>
+                    <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Allowed to print {pack?.noofpagesprint} pages
+                        </h6>
+                      </div>
+                    </div> 
+                     <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Allowed to scan {pack?.noofpagesscan} pages
+                        </h6>
+                      </div>
+                    </div> 
+                     <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Storage Memory Availabe {pack?.storagememory} GB
+                        </h6>
+                      </div>
+                    </div>
+                      <div className="media">
+                      <img
+                        src="assets/images/documents-2.png"
+                        className="mr-2"
+                        alt="..."
+                      />
+                      <div className="media-body">
+                        <h6 className="mt-0 text-left">
+                          Access to internet {pack?.internethours} hours
+                        </h6>
+                      </div>
+                    </div>
+
                     <div className="media">
                       <img
                         src="assets/images/documents-2.png"

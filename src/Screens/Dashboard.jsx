@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 
-const Dashboard = () => {
+const Dashboard = ({history}) => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  useEffect(() => {
+    if (userInfo) {
+      userInfo?.subscription == null && SubscriptionAuthorization(history);
+    }
+
+  }, []);
+
   return (
     <section className="board">
       <div className="container">
