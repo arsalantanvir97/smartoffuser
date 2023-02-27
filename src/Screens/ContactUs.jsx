@@ -40,7 +40,7 @@ const ContactUs = ({ history }) => {
         );
         setloading(false);
         if (res?.status == 201) {
-          history?.push("/Home");
+          history?.push("/Dashboard");
           Swal.fire({
             icon: "success",
             title: "",

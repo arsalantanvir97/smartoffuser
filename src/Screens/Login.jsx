@@ -35,7 +35,7 @@ const Login = ({ history }) => {
 
   useEffect(() => {
     if (userInfo) {
-      history.replace("/Home");
+      history.replace("/Dashboard");
     }
   }, [userInfo]);
   return (

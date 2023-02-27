@@ -17,7 +17,7 @@ const SignUp2 = ({ history }) => {
   const { userInfo } = userLogin;
   useEffect(() => {
     if (userInfo) {
-      history.replace("/Home");
+      history.replace("/Dashboard");
     }
   }, [userInfo]);
   const [firstName, setfirstName] = useState("");

@@ -8,6 +8,10 @@ import ServicesSlider from "../components/ServicesSlider";
 import SubscriptionAuthorization from "../components/SubscriptionAuthorization";
 import MoonLoader from "react-spinners/MoonLoader";
 import { css } from "@emotion/react";
+import { getPolicyTerms, getServices } from "../helpers/apis";
+import { useQuery } from "react-query";
+import Loader from "react-spinners/MoonLoader";
+import Loaderr from "../components/Loaderr";
 
 const override = css`
   display: block;
@@ -16,7 +20,6 @@ const override = css`
   z-index: 1111111;
 `;
 const Home = ({ history }) => {
-  const [services, setservices] = useState([]);
   const [howitworks, sethowitworks] = useState();
   const [question, setquestion] = useState("");
   const [videouri, setvideouri] = useState("");
@@ -32,42 +35,32 @@ const Home = ({ history }) => {
     if (userInfo) {
       userInfo?.subscription == null
         ? SubscriptionAuthorization(history)
-        : history.replace("/Home");
+        : history.replace("/Dashboard");
     }
   }, []);
 
-  const getServices = async () => {
-    try {
-      const res = await axios.get(`${baseURL}/user/getServices`);
-      setservices(res?.data?.services);
-      console.log("servicesres", res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const getPolicyTerms = async () => {
-    try {
-      const res = await axios.get(`${baseURL}/policyterms/getpolicyterms`);
-      console.log("getPolicyTermsres", res);
-      sethowitworks(res?.data?.howitworkss);
-      setquestion(res?.data?.question);
-      setbecomevendor(res?.data?.becomevendor);
-      setvideouri(res?.data?.videosection?.videouri);
-      setyoutubeid(res?.data?.videosection?.videouri?.split("v=")[1]);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const { isLoading: serviceloading, data: services } = useQuery(["services",], () =>
+    getServices(),
+
+  );
+  const { isLoading: shiploading, data: policydata } = useQuery(["policyterms",], () =>
+    getPolicyTerms(),
+
+  );
 
   useEffect(() => {
-    getServices();
-    getPolicyTerms();
-  }, []);
+    sethowitworks(policydata?.howitworkss);
+    setquestion(policydata?.question);
+    setbecomevendor(policydata?.becomevendor);
+    setvideouri(policydata?.videosection?.videouri);
+    setyoutubeid(policydata?.videosection?.videouri?.split("v=")[1]);
+  }, [policydata])
+
 
   return (
     <>
       <Header2 />
+      {shiploading?<Loaderr/>:
       <div>
         <section className="slider-box">
           <div style={{ width: "100%" }}>
@@ -130,9 +123,9 @@ const Home = ({ history }) => {
                   </div>
                 </div>
               </div>
-              <div   onClick={() => {
-                  history?.push("/Login");
-                }} className="col-lg-4">
+              <div onClick={() => {
+                history?.push("/Login");
+              }} className="col-lg-4">
                 <div className="card work-card">
                   <div className="card-body text-center">
                     <img src="assets/images/man.png" alt="" />
@@ -144,8 +137,8 @@ const Home = ({ history }) => {
               <div className="col-lg-4">
                 <div className="card work-card">
                   <div className="card-body text-center">
-                    <img src="assets/images/android ios.png" style={{maxWidth:64,maxHeight:95,minWidth:64,minHeight:95}} alt="" />
-                    <h4 style={{fontSize:20}} className="card-title">Available on Android and IOS</h4>
+                    <img src="assets/images/android ios.png" style={{ maxWidth: 64, maxHeight: 95, minWidth: 64, minHeight: 95 }} alt="" />
+                    <h4 style={{ fontSize: 20 }} className="card-title">Available on Android and IOS</h4>
                     <p className="card-text">{howitworks?.launch}</p>
                   </div>
                 </div>
@@ -153,13 +146,13 @@ const Home = ({ history }) => {
             </div>
           </div>
         </section>
-        <div className="card-slider" style={{maxWidth:700,maxHeight:500}}>
+        <div className="card-slider" style={{ maxWidth: 700, maxHeight: 500 }}>
           <div className="container-fluid">
             <div className="row align-items-center ml-4">
               <div className="col-lg-10 col-md-12 col-12  justify-content-lg-center align-items-lg-center">
                 <div className="card-slider-txt">
-                  <h5 style={{fontSize:40,marginTop:5}}
-                  
+                  <h5 style={{ fontSize: 40, marginTop: 5 }}
+
                   // className="wow animate__animated animate__fadeInDown"
                   // data-wow-duration="1.3s"
                   // data-wow-delay="0.3s"
@@ -394,7 +387,7 @@ const Home = ({ history }) => {
             </div>
           </div>
         </section>
-      </div>
+      </div>}
     </>
   );
 };

@@ -13,7 +13,7 @@ const Home2 = ({ history }) => {
   const { userInfo } = userLogin;
   useEffect(() => {
     if (userInfo) {
-      userInfo?.subscription==null ? SubscriptionAuthorization(history) : history.replace("/Home");
+      userInfo?.subscription==null ? SubscriptionAuthorization(history) : history.replace("/Dashboard");
     } 
     
   }, []);

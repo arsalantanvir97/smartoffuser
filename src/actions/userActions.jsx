@@ -24,7 +24,10 @@ export const userSignUpAction = (body, history) => async (dispatch) => {
     console.log("USERSignUpAction");
 
     const res = await axios.post(`${baseURL}/user/register`, body);
+if(res?.status==203){
+  Toasty("error", res?.data?.error);
 
+}
     console.log("USERSignUpAction", res);
 
     dispatch({
